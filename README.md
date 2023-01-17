@@ -148,3 +148,5 @@ patch a sw.diff -o b
     ```bash
     file -m "매직파일" "찾고자하는유형의 파일"
     ```
+
+# C언어 기초
