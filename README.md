@@ -343,3 +343,226 @@ patch a sw.diff -o b
     ```bash
     cat /etc/passwd | grep -v '^#' | awk 'NR%2==0' | cut -d ':' -f 1 | rev | sort -r | sed -n ${FT_LINE1},${FT_LINE2}p | tr '\n' ',' | sed 's/,/, /g' | sed 's/..$/./g' | tr -d "\n"
     ```
+
+## 2. C언어
+
+### C Piscine C 00
+
+1. **Exercise 00**
+
+- **함수에 인자로 전달받은 값을 write를 이용하여 출력**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+    
+    void    ft_putchar(char c)
+     18 {
+     19     write(1, &c, 1);
+     20 }
+    ```
+    
+    2번째 인자로 받은 값 1글자를 표준 출력(화면에 보이게) 
+    
+1. **Exercise 01**
+
+- **알파벳 소문자를 오름차순으로 정렬하여 출력**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+     14 
+     15 void    ft_print_alphabet(void);
+     16 
+     17 void    ft_print_alphabet(void)
+     18 {
+     19     write(1, "abcdefghijklnmopqrstuvwxyz", 26);
+     20 }
+    ```
+    
+    변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
+    
+
+1. **Exercise 02**
+
+- **알파벳 소문자를 내림차순로 정렬하여 출력**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+     14 
+     15 void    ft_print_reverse_alphabet(void);
+     16 
+     17 void    ft_print_reverse_alphabet(void)
+     18 {
+     19     write(1, "zyxwvutsrqpomnlkjihgfedcba", 26);
+     20 }
+    ```
+    
+    변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
+    
+1. **Exercise 03**
+
+- **모든 숫자를 오름차순으로 정렬하여 출력**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+     14 
+     15 void    ft_print_number(void);
+     16 
+     17 void    ft_print_number(void)
+     18 {
+     19     write(1, "0123456789", 10);
+     20 }
+    ```
+    
+    변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
+    
+1. **Exercise 04**
+
+- **입력받은 숫자가 음수인지 양수인지 구분하고 상황에 맞게 출력(조건문 필요)**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+     14 
+     15 void    ft_is_negative(int n);
+     16 
+     17 void    ft_is_negative(int n)
+     18 {
+     19     if (n < 0)
+     20     {
+     21         write(1, 'N', 1);
+     22     }
+     23     else
+     24     {
+     25         write(1, 'P', 1);
+     26     }
+     27 }
+    ```
+    
+1. **Exercise 05**
+
+- **세자릿수의 모두 다른 조합을 오름차순으로 출력**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_print_comb(void);
+    /*
+    int main(){
+    
+    	ft_print_comb();
+    	return 0;
+    }
+    */
+    
+    void	ft_print_comb(void)
+    {
+    	char	i;
+    	char	j;
+    	char	k;
+    
+    	i = '0' - 1;
+    	while (i++ < '7')
+    	{
+    		j = i;
+    		while (j++ < '8')
+    		{
+    			k = j;
+    			while (k++ < '9')
+    			{
+    				write(1, &i, 1);
+    				write(1, &j, 1);
+    				write(1, &k, 1);
+    				if (!(i == '7' && j == '8' && k == '9'))
+    					write(1, ", ", 2);
+    			}
+    		}
+    	}
+    }
+    ```
+    
+    - 반복문을 사용하여 해결 n값이 정해져 있으므로 10 - n(3) 부터 시작하면 해결이 가능
+    - 코드를 단축시키기 위해 조건문 안에 연산자를 사용
+        - 이 때 i = -1 부터 시작해야 제대로 출력이 된다.
+    
+
+```bash
+#include <unistd.h>
+
+void ft_print_combn(int n);
+int IsPossible(int pre, int curr);
+void Backtracking(char arr[], int pre, int idx, int n, int check);
+void PrintNumber(char arr[], int idx, int check);
+
+int main(){
+    ft_print_combn(2);
+    return 0;
+}
+
+int IsPossible(int pre, int curr){
+    if(pre<curr )
+        return 1;
+    else
+        return 0;
+}
+void PrintNumber(char arr[], int idx, int check){
+    char str[2];
+    write(1, arr, idx);
+    if(!check){
+        str[0] = ',';
+        str[1] = ' ';
+        write(1, str, 2);
+    } 
+        return;
+    
+}
+void Backtracking(char arr[], int pre, int idx,  int n, int check){
+    if(n==0){
+        PrintNumber(arr, idx, check);
+    }
+    for(int i=0; i<10; i++){ // 0또는 pre부터 시작
+        if(IsPossible(pre,i)){
+            char ch = '0'+i;
+            arr[idx] = ch;
+            Backtracking(arr, i, idx+1,n-1,check);
+        }
+    }
+}
+
+void ft_print_combn(int n){
+    if(n>10 || n<0)
+        return ; // 예외처리
+    char arr[10]; 
+    int check = 0; // 마지막인지 확인하기 위해 
+    for(int i=0; i<10; i++){
+        char start = '0'+i; // 최초 값 삽입
+        int idx = 0;
+        arr[idx] = start;
+        if(i==(10-n))check = 1;  // 최대 크기 - n => 마지막
+        Backtracking(arr, i,idx+1, n-1,check); //  시작점 부터, 노드는 1칸 줄어듬
+        if(check ==1) return;
+    }
+}
+```
