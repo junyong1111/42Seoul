@@ -509,62 +509,235 @@ patch a sw.diff -o b
     - 코드를 단축시키기 위해 조건문 안에 연산자를 사용
         - 이 때 i = -1 부터 시작해야 제대로 출력이 된다.
     
+1. **Exercise 06**
 
-```bash
-#include <unistd.h>
-
-void ft_print_combn(int n);
-int IsPossible(int pre, int curr);
-void Backtracking(char arr[], int pre, int idx, int n, int check);
-void PrintNumber(char arr[], int idx, int check);
-
-int main(){
-    ft_print_combn(2);
-    return 0;
-}
-
-int IsPossible(int pre, int curr){
-    if(pre<curr )
-        return 1;
-    else
-        return 0;
-}
-void PrintNumber(char arr[], int idx, int check){
-    char str[2];
-    write(1, arr, idx);
-    if(!check){
-        str[0] = ',';
-        str[1] = ' ';
-        write(1, str, 2);
-    } 
-        return;
+- **두자릿수의 모든 조합을 오름차순으로 출력하는 과제**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
     
-}
-void Backtracking(char arr[], int pre, int idx,  int n, int check){
-    if(n==0){
-        PrintNumber(arr, idx, check);
+    ```c
+    #include <unistd.h>
+    
+    void	ft_print_comb2(void);
+    void	print_number(int n);
+    
+    /*
+    int main(){
+    	ft_print_comb2();
+    	return 0;
     }
-    for(int i=0; i<10; i++){ // 0또는 pre부터 시작
-        if(IsPossible(pre,i)){
-            char ch = '0'+i;
-            arr[idx] = ch;
-            Backtracking(arr, i, idx+1,n-1,check);
-        }
+    */
+    void	print_number(int n)
+    {
+    	char	str[2];
+    
+    	str[0] = '0' + n / 10;
+    	str[1] = '0' + n % 10;
+    	write(1, str, 2);
     }
-}
+    
+    void	ft_print_comb2(void)
+    {
+    	int	i;
+    	int	j;
+    
+    	i = 0;
+    	while (i < 99)
+    	{
+    		j = i;
+    		while (++j < 100)
+    		{
+    			print_number(i);
+    			write(1, " ", 1);
+    			print_number(j);
+    			if (i != 98 && j != 100)
+    				write(1, ", ", 2);
+    		}
+    		i++;
+    	}
+    }
+    ```
+    
+    - 반복문을 사용하여 해결 자릿수가 2개로 고정되어 있으므로 고정값을 넣어 해결이 가능
+    
+1. **Exercise 07**
 
-void ft_print_combn(int n){
-    if(n>10 || n<0)
-        return ; // 예외처리
-    char arr[10]; 
-    int check = 0; // 마지막인지 확인하기 위해 
-    for(int i=0; i<10; i++){
-        char start = '0'+i; // 최초 값 삽입
-        int idx = 0;
-        arr[idx] = start;
-        if(i==(10-n))check = 1;  // 최대 크기 - n => 마지막
-        Backtracking(arr, i,idx+1, n-1,check); //  시작점 부터, 노드는 1칸 줄어듬
-        if(check ==1) return;
+- **정수를 문자열로 반환하는 Integer To String 과제**
+    - write : 문자열 단위로 파일에 입력하는 함수
+        - 1번째 인자 : 0 → 표준 입력, 1→ 표준 출력, 2→ 표준 에러
+        - 2번째 인자 : 문자열 주소
+        - 3번째 인자 : 몇 바이트 즉 몇 글자 출력 할지
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_putnbr(int nb);
+    int		number_len(int nb);
+    int		check_minus(int number);
+    void	integer_to_string(int nb);
+    /*
+    int main(){
+    	ft_putnbr(-150);
+    	return 0;
     }
-}
-```
+    */
+    
+    void	integer_to_string(int nb)
+    {
+    	char	str[11];
+    	int		len;
+    	int		temp;
+    
+    	len = number_len(nb);
+    	temp = len;
+    	while (nb != 0)
+    	{
+    		str[len - 1] = '0' + (nb % 10);
+    		nb = nb / 10;
+    		len--;
+    	}
+    	write(1, str, temp);
+    }
+    
+    int	check_minus(int number)
+    {
+    	if (number < 0)
+    	{
+    		return (1);
+    	}
+    	else
+    		return (0);
+    }
+    
+    int	number_len(int nb)
+    {
+    	int	len;
+    	int	temp;
+    
+    	len = 0;
+    	if (check_minus(nb) == 1)
+    	{
+    		nb = nb * -1;
+    	}
+    	temp = nb;
+    	while (temp != 0)
+    	{
+    		len ++;
+    		temp = temp / 10;
+    	}
+    	return (len);
+    }
+    
+    void	ft_putnbr(int nb)
+    {
+    	int		len;
+    	int		check;
+    	char	*str;
+    
+    	str = NULL;
+    	len = number_len(nb);
+    	if (nb == -2147483648)
+    	{
+    		write(1, "-", 1);
+    		write(1, "2147483648", 10);
+    		return ;
+    	}
+    	if (nb == 0)
+    	{
+    		write(1, "0", 1);
+    		return ;
+    	}
+    	check = check_minus(nb);
+    	if (check == 1)
+    	{
+    		nb = nb * -1;
+    		write(1, "-", 1);
+    	}
+    	integer_to_string(nb);
+    }
+    ```
+    
+    - 주의해야 할 점 음수 최댓값 오버플로
+    - 0 예외 처리
+    - 길이와 음수를 확인 후 하나씩 char 배열에 담아서 출력해주면 된다.
+    
+1. **Exercise 08**
+
+- **n값을 입력받아 가능한 조합을 오름차순으로 정렬하여 출력하는 과제**
+    - 백트랙킹 알고리즘 사용
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_print_combn(int n);
+    int		is_possible(int pre, int curr);
+    void	back_tracking(char arr[], int pre, int idx, int node);
+    void	print_number(char arr[], int idx);
+    /*
+    int main(){
+        ft_print_combn(3);
+        return 0;
+    }
+    */
+    
+    int	is_possible(int pre, int curr)
+    {
+    	if (pre < curr)
+    		return (1);
+    	else
+    		return (0);
+    }
+    
+    void	print_number(char arr[], int idx)
+    {
+    	write(1, arr, idx);
+    	if (10 - idx + '0' != arr[0])
+    		write(1, ", ", 2);
+    }
+    
+    void	back_tracking(char arr[], int pre, int idx, int node)
+    {
+    	int	i;
+    
+    	i = 0;
+    	if (node == 0)
+    	{
+    		print_number(arr, idx);
+    		return ;
+    	}
+    	while (i < 10)
+    	{
+    		if (is_possible(pre, i) == 1)
+    		{
+    			arr[idx] = '0' + i;
+    			back_tracking(arr, i, idx + 1, node - 1);
+    		}
+    		i++;
+    	}
+    }
+    
+    void	ft_print_combn(int n)
+    {
+    	char	arr[10];
+    	int		i;
+    	int		idx;
+    
+    	if (n > 10 || n < 0)
+    		return ;
+    	i = 0;
+    	while (i < 10)
+    	{
+    		idx = 0;
+    		arr[idx] = '0' + i;
+    		back_tracking(arr, i, idx + 1, n -1);
+    		i++;
+    	}
+    }
+    ```
+    
+    - 상태공간 트리를 이용
+    - 조건 : 현재값은 무조건 이전값보다 커야함
+    - 가능하다면 높이를 1줄이고 다시 백트랙킹 시작
+    - 모든 트랙킹이 완료되었다면 저장되었던 값 출력
