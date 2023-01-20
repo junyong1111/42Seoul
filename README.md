@@ -741,3 +741,352 @@ patch a sw.diff -o b
     - 조건 : 현재값은 무조건 이전값보다 커야함
     - 가능하다면 높이를 1줄이고 다시 백트랙킹 시작
     - 모든 트랙킹이 완료되었다면 저장되었던 값 출력
+    
+### C Piscine C 03
+
+1. **Exercise 00**
+
+- **string.h에 포함되어 있는 strcmp 함수 구현**
+    - **strcmp :  (비교할 문자열1, 비교할 문자열 2)**
+        - 2개의 문자열을 비교하여 그 차이값(아스키코드)를 반환해주는 함수
+    
+    ```c
+    
+    int	ft_strcmp(char *s1, char *s2);
+    /*
+    int main()
+    {
+    	char s1[10] = "Hello";
+    	char s2[3] = "lo";
+    
+    	printf("My Function Answer is %d\n", ft_strcmp(s1, s2));
+    	printf("C Function Answer is %d\n", strcmp(s1, s2));
+    	
+    	return 0;
+    }
+    */
+    
+    int	ft_strcmp(char *s1, char *s2)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (s1[i] != 0 || s2[i] != 0)
+    	{
+    		if (s1[i] == s2[i])
+    		{
+    			i++;
+    		}
+    		else
+    			break ;
+    	}
+    	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+    }
+    ```
+    
+    - 두 개의 문자열중 하나라도 끝날때까지 반복 진행
+    - 두 개의 문자가 다르다면불필요한 연산을 멈추고 그 차이값을 반환
+    
+    —# 주의해야할 점 : s1문자열뿐 아니라 s2문자열이 먼저 끝나는 상황도 조심해야 함
+    
+1. **Exercise 01**
+
+- **string.h에 포함되어 있는 strnmp 함수 구현**
+    - **strncmp :  (비교할 문자열1, 비교할 문자열 2, 크기)**
+        - 2개의 문자열을 **주어진 크기**만큼 비교하여 그 차이값(아스키코드)를 반환해주는 함수
+    
+    ```c
+    int	ft_strncmp(char *s1, char *s2, unsigned int n);
+    /*
+    int main()
+    {
+    	char s1[15] = "Hello World!!";
+    	char s2[15] = "Hello Word!!";
+    //	char s1[15] = "Heo !!";
+    //	char s2[15] = "Hello Word!!";
+    	int n = 3;
+    	printf("%d\n", ft_strncmp(s1, s2, n));
+    	printf("%d\n", strncmp(s1,s2,n));
+    	return 0;
+    }
+    */
+    
+    int	ft_strncmp(char *s1, char *s2, unsigned int n)
+    {
+    	unsigned int	i;
+    
+    	if (n == 0)
+    		return (0);
+    	i = 0;
+    	while (i < n)
+    	{
+    		if (!(s1[i] && s2[i]))
+    			return ((unsigned char)s1[i] -(unsigned char)s2[i]);
+    		if (s1[i] == s2[i])
+    			i++;
+    		else
+    		{
+    			i++;
+    			break ;
+    		}
+    	}
+    	return (((unsigned char)s1[i -1] - (unsigned char)s2[i -1]));
+    }
+    ```
+    
+    - 주어진 크기를 넘어가지 않도록 반복진행
+    - **만약 크기가 0이라면 비교할 것이 없으므로 0을 반환**
+        - 주어진 크기보다 2개의 문자열의 길이가 더 작고 그 2개의 문자열이 동일한 경우 의미 없는 반복이 지속될 수 있으니 2개의 문자열 모두 비어있다면 반복을 중단
+        
+        → ex) str1[10] = “ab, str2[10] = “ab”, size = 1000의 경우 의미없는 반복이 수행
+        
+        → ex) str1[10] = “ab”, str2[10] = “abcde”, size = 1000의 경우 null문자와 ‘c’를 비교하므로 자동으로 break에 걸림
+        
+    
+    —# 주의할 점 : 주어진 크기가 문자열보다 짧을 경우 이를 확인할 수 있어야 함
+    
+1. **Exercise 02**
+
+- **string.h에 포함되어 있는 strcat 함수 구현**
+    - **strcat :  (목적지 문자열 , 소스 문자열 )**
+        - **소스문자열을 목적지 문자열 뒤에 붙이는 함수**
+    
+    ```c
+    char	*ft_strcat(char *dest, char *src);
+    /*
+    int main()
+    {
+    	char dest[20] = "Hello";
+    	char src[20] = " World!!";
+    	
+    	char dest2[20] = "Hello";
+    	char src2[20] = " World!!";
+    	printf("my Function Answer : %s\n", ft_strcat(dest, src));
+    	printf("C Function Answer : %s\n", strcat(dest2, src2));
+    	return 0;
+    }
+    */
+    
+    char	*ft_strcat(char *dest, char *src)
+    {
+    	char	*temp;
+    
+    	temp = dest;
+    	while (*temp != 0)
+    		temp++;
+    	while (*src != 0)
+    	{
+    		*temp = *src;
+    		temp++;
+    		src++;
+    	}
+    	*temp = '\0';
+    	temp = dest;
+    	return (temp);
+    }
+    ```
+    
+    - 주어진 문자열을 임시 변수에 저장 후 컨트롤
+    - 목적지 문자열에 소스 문자열을 더해야하므로 목적지 문자열을 NULL문자까지  가야함
+    - 이후 목적지 문자열에 소스 문자열을 하나씩 대입시켜줌
+    - 문자열의 마지막은 NULL문자가 들어가야하므로 NULL삽입
+    - 임시 변수를 다시 목적지의 첫 주소로 초기화 해주고 반환
+    
+1. **Exercise 03**
+
+- **string.h에 포함되어 있는 strncat 함수 구현**
+    - **strncat :  (목적지 문자열, 소스 문자열, 크기)**
+        - 소스문자열을 목적지 문자열에 **주어진 크기**만큼 복사하는 함수
+    
+    ```c
+    
+    char	*ft_strncat(char *dest, char *src, unsigned int nb);
+    /*
+    int main()
+    {
+    	char dest1[20] = "Hello";
+    	char src1[20] = " World";
+    
+    	char dest2[20] = "Hello";
+    	char src2[20] = " World";
+    	
+    	int n = 15;
+    
+    	printf("My Func is %s\n", ft_strncat(dest1, src1, n));
+    	printf("C  Func is %s\n", strncat(dest2, src2, n));
+    
+    	return 0;
+    }
+    */
+    
+    char	*ft_strncat(char *dest, char *src, unsigned int nb)
+    {
+    	char				*temp;
+    	unsigned int		i;
+    
+    	i = 0;
+    	temp = dest;
+    	if (nb == 0)
+    		return (dest);
+    	while (*temp != 0)
+    		temp++;
+    	while (i < nb && *(src + i))
+    		*temp++ = *(src + i++);
+    	*temp = '\0';
+    	temp = dest;
+    	return (temp);
+    }
+    ```
+    
+    - 복사할 크기가 0이라면 예외처리 ( 마지막 while문으로 인해 굳이 할 필요는 없지만 불필요한 연산을 막기위해)
+    - 임시 변수에 목적지 문자열에 주소를 담고 NULL까지 포인터 전진
+    - 주어진 크기만큼 갔거나 더이상 복사할 소스문자열이 없는 경우 멈춤
+        - **소~~스문자열의 부족**으로 **인한 중단** 시 **나머지 부분은 공백**으로 채워주어야 한다.~~
+    - **마지막 문자 공백 추가**
+    
+1. **Exercise 04**
+
+- **string에 있는 특정 문자열을 찾는 함수 구현**
+    - **strstr :  (문자열, 문자패턴)**
+        - **주어진 문자열에서 특정 문자패턴을 찾아서 문자열의 첫번째 인덱스를 반환**
+    
+    ```c
+    char	*ft_strstr(char *str, char *to_find);
+    int		find_string(char *str, char *to_find, int i, int j);
+    /*
+    int main()
+    {
+    
+    	char	*string1 = "needle in a haystack";
+    	char	*string2 = "haystack";
+    	printf("My Func Answer is : %s\n", ft_strstr(string1, string2));
+    	char	*string_1 = "needle in a haystack";
+    	char	*string_2 = "haystack";
+    	printf("C  Func Answer is : %s\n", strstr(string_1, string_2));
+    	return 0;
+    }
+    */
+    
+    int	find_string(char *str, char *to_find, int i, int j)
+    {
+    	int	check;
+    
+    	check = 1;
+    	while (to_find[j] != 0)
+    	{
+    		if (*(str + i + j) == to_find[j])
+    		{
+    			j++;
+    			check = 1;
+    		}
+    		else
+    		{
+    			check = 0;
+    			break ;
+    		}
+    	}
+    	return (check);
+    }
+    
+    char	*ft_strstr(char *str, char *to_find)
+    {
+    	int	i;
+    	int	check;
+    
+    	if (*to_find == 0)
+    		return (str);
+    	i = 0;
+    	while (*(str + i) != 0)
+    	{
+    		check = 0;
+    		if (*(str + i) == to_find[0])
+    			check = find_string(str, to_find, i, 1);
+    		if (check == 1)
+    			return (str + i);
+    		i++;
+    	}
+    	return (0);
+    }
+    ```
+    
+    - 주어진 문자패턴이 NULL인 경우 본래 문자를 반환
+    - 문자열을 하나씩 탐색시작
+        - 탐색한 문자열이 문자패턴의 첫글자와 일치한다면 find_string함수 실행
+    - find_string(문자열, 문자패턴, 탐색한 문자열의 패턴 시작, 0);
+        - 문자패턴이 0부터 시작이고 이미 일치했다는 사실을 알고있으므로 1증가한 상태에서부터 문자패턴 탐색 시작
+            - i : 현재 문자열 과 다음 문자열의 패턴이 동일하다면 flag =1, 전진
+            - 틀리다면 플래그 = 0, 중단
+        - 모든 패턴을 탐색했을 때도 중단되지 않았다면 문자를 찾음
+    
+1. **Exercise 05**
+
+- **string에 있는 원하는 길이만큼의 문자열을 더해주는 함수 구현**
+    - **strlcat :  (목적지 문자열, 소스문자열,  크기 )**
+        - 목적지 문자열에 소스문자열을 주어진 크기만큼 더해주는 함수이며 반환값은 int
+        - **여기서 크기는 반드시 목적지 문자열 + 소스 문자열 + NULL문자가 포함되는 길이  이상이어야한다.**
+    
+    ```c
+    unsigned int	ft_strlcat(char *dest, char *src, unsigned int size);
+    int				str_len(char *str);
+    /*
+    int main()
+    {
+    
+    	char dest[20] = "123";
+    	char src[20] = "456789";
+    
+    	char dest1[20] = "123";
+    	char src2[20] = "456789";
+    
+    	int size = 7;
+    	printf("My F Answer is : %u \n", ft_strlcat(dest, src, size));
+    	printf("My F Answer is : %s \n",dest);
+    	printf("C  F Answer is : %lu \n", strlcat(dest1, src2, size));
+    	printf("C  F Answer is : %s \n", dest1);
+    	return 0;
+    }
+    */
+    
+    int	str_len(char *str)
+    {
+    	char	*temp;
+    	int		len;
+    
+    	temp = str;
+    	len = 0;
+    	while (*temp != 0)
+    	{
+    		len++;
+    		temp++;
+    	}
+    	return (len);
+    }
+    
+    unsigned int	ft_strlcat(char *dest, char *src, unsigned int size)
+    {
+    	unsigned int	i;
+    	unsigned int  dest_len;
+    	unsigned int  src_len;
+    
+    	dest_len = str_len(dest);
+    	src_len = str_len(src);
+    	i = 0;
+    	if (size <= dest_len)
+    		return (src_len + size);
+    	while (i + dest_len + 1 < size)
+    	{
+    		dest[dest_len + i] = src[i];
+    		i++;
+    	}
+    	dest[dest_len + i] = '\0';
+    	return (src_len + dest_len);
+    }
+    ```
+    
+    - 만약 주어진 크기가 목적지 문자열 조차 담지 못하는 크기가 주어진다면 아무런 행동도 하지 않고 (소스 문자열의 길이 + 크기) 반환
+    - 주어진 크기가 충분하다면 목적지 문자열에 해당 소스문자열을 하나씩 대입
+    
+    —# 여기서 크기는 NULL문자를 보장해주기 때문에 크기는 항상 -1을 해야한다.
+    
+    - 마지막에는 NULL문자를 반환
+        - 정상 종료 시 소스 문자열 + 목적지 문자열을 반환
