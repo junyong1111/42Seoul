@@ -1,5 +1,15 @@
 ### C Piscine Shell 00
 
+<!--
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
+
+</div>
+</details>
+----------------------
+-->
+
 1. **Exercise 00**
 
 - **cat명령어를 사용하여 지정된 파일에 내용을 확인**
@@ -1090,3 +1100,14 @@ patch a sw.diff -o b
     
     - 마지막에는 NULL문자를 반환
         - 정상 종료 시 소스 문자열 + 목적지 문자열을 반환
+
+
+<!--
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
+
+</div>
+</details>
+----------------------
+-->
