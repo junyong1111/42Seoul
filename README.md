@@ -1,4 +1,4 @@
-### C Piscine Shell 00
+### C Piscine 
 
 <!--
 <details>
@@ -9,6 +9,11 @@
 </details>
 ----------------------
 -->
+
+<details>
+<summary> Shell 00  </summary>
+<div markdown="1">
+
 
 1. **Exercise 00**
 
@@ -123,7 +128,7 @@ git ls files --others --ignore --exclude-standard
 patch a sw.diff -o b
 ```
 
-1. **Exercise 08**
+7. **Exercise 08**
 
 - **find 명령어는 특정 타입의 데이터들을 찾아주는 명령어**
     - type -f : 파일타입만을 찾음
@@ -142,7 +147,7 @@ patch a sw.diff -o b
     find -type f \( -name "#*#" -or -name "*~"\) -print -delete
     ```
     
-9. **Exercise 09**
+8. **Exercise 09**
 
 - **file 명령어는 지정된 파일의 타입을 확인할 수 있다.**
     - -m : 지정된 magic 파일을 이용하여 타입을 확인
@@ -157,8 +162,16 @@ patch a sw.diff -o b
     file -m "매직파일" "찾고자하는유형의 파일"
     ```
     
+    
+</div>
+</details>
 
 ### C Piscine Shell 01
+
+<!--
+<details>
+<summary> Shell 01  </summary>
+<div markdown="1">
 
 1. **Exercise 01**
 
@@ -355,6 +368,14 @@ patch a sw.diff -o b
     ```bash
     cat /etc/passwd | grep -v '^#' | awk 'NR%2==0' | cut -d ':' -f 1 | rev | sort -r | sed -n ${FT_LINE1},${FT_LINE2}p | tr '\n' ',' | sed 's/,/, /g' | sed 's/..$/./g' | tr -d "\n"
     ```
+
+</div>
+</details>
+----------------------
+-->
+
+
+
 
 ## 2. C언어
 
