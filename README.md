@@ -1,4 +1,6 @@
-### C Piscine 
+## 1. Shell
+
+### C Piscine Shell 00
 
 <!--
 <details>
@@ -168,7 +170,6 @@ patch a sw.diff -o b
 
 ### C Piscine Shell 01
 
-<!--
 <details>
 <summary> Shell 01  </summary>
 <div markdown="1">
@@ -371,15 +372,16 @@ patch a sw.diff -o b
 
 </div>
 </details>
-----------------------
--->
-
-
 
 
 ## 2. C언어
 
 ### C Piscine C 00
+
+<details>
+<summary> C 00  </summary>
+<div markdown="1">
+
 
 1. **Exercise 00**
 
@@ -400,7 +402,7 @@ patch a sw.diff -o b
     
     2번째 인자로 받은 값 1글자를 표준 출력(화면에 보이게) 
     
-1. **Exercise 01**
+2. **Exercise 01**
 
 - **알파벳 소문자를 오름차순으로 정렬하여 출력**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -422,7 +424,7 @@ patch a sw.diff -o b
     변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
     
 
-1. **Exercise 02**
+3. **Exercise 02**
 
 - **알파벳 소문자를 내림차순로 정렬하여 출력**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -443,7 +445,7 @@ patch a sw.diff -o b
     
     변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
     
-1. **Exercise 03**
+4. **Exercise 03**
 
 - **모든 숫자를 오름차순으로 정렬하여 출력**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -464,7 +466,7 @@ patch a sw.diff -o b
     
     변수를 사용하지 않고 문자열을 바로 입력해도 상관없다.
     
-1. **Exercise 04**
+5. **Exercise 04**
 
 - **입력받은 숫자가 음수인지 양수인지 구분하고 상황에 맞게 출력(조건문 필요)**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -490,7 +492,7 @@ patch a sw.diff -o b
      27 }
     ```
     
-1. **Exercise 05**
+6. **Exercise 05**
 
 - **세자릿수의 모두 다른 조합을 오름차순으로 출력**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -540,7 +542,7 @@ patch a sw.diff -o b
     - 코드를 단축시키기 위해 조건문 안에 연산자를 사용
         - 이 때 i = -1 부터 시작해야 제대로 출력이 된다.
     
-1. **Exercise 06**
+7. **Exercise 06**
 
 - **두자릿수의 모든 조합을 오름차순으로 출력하는 과제**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -593,7 +595,7 @@ patch a sw.diff -o b
     
     - 반복문을 사용하여 해결 자릿수가 2개로 고정되어 있으므로 고정값을 넣어 해결이 가능
     
-1. **Exercise 07**
+8. **Exercise 07**
 
 - **정수를 문자열로 반환하는 Integer To String 과제**
     - write : 문자열 단위로 파일에 입력하는 함수
@@ -694,7 +696,7 @@ patch a sw.diff -o b
     - 0 예외 처리
     - 길이와 음수를 확인 후 하나씩 char 배열에 담아서 출력해주면 된다.
     
-1. **Exercise 08**
+9. **Exercise 08**
 
 - **n값을 입력받아 가능한 조합을 오름차순으로 정렬하여 출력하는 과제**
     - 백트랙킹 알고리즘 사용
@@ -773,6 +775,11 @@ patch a sw.diff -o b
     - 가능하다면 높이를 1줄이고 다시 백트랙킹 시작
     - 모든 트랙킹이 완료되었다면 저장되었던 값 출력
     
+    
+</div>
+</details>
+
+
 ### C Piscine C 03
 
 1. **Exercise 00**
