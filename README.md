@@ -782,6 +782,11 @@ patch a sw.diff -o b
 
 ### C Piscine C 03
 
+
+<details>
+<summary> C 03  </summary>
+<div markdown="1">
+
 1. **Exercise 00**
 
 - **string.h에 포함되어 있는 strcmp 함수 구현**
@@ -1128,6 +1133,12 @@ patch a sw.diff -o b
     
     - 마지막에는 NULL문자를 반환
         - 정상 종료 시 소스 문자열 + 목적지 문자열을 반환
+
+
+</div>
+</details>
+
+
 
 
 <!--
