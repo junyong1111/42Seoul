@@ -1139,7 +1139,34 @@ patch a sw.diff -o b
 </details>
 
 
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
 
+</div>
+</details>
+
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
+
+</div>
+</details>
+
+
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
+
+</div>
+</details>
+
+<details>
+<summary> C Piscine Shell 00  </summary>
+<div markdown="1">
+
+</div>
+</details>
 
 <!--
 <details>
