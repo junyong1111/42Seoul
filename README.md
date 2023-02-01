@@ -779,6 +779,23 @@ patch a sw.diff -o b
 </div>
 </details>
 
+### C Piscine C 01
+
+<details>
+<summary> C 01 </summary>
+<div markdown="1">
+
+</div>
+</details>
+
+### C Piscine C 02
+
+<details>
+<summary> C 02  </summary>
+<div markdown="1">
+
+</div>
+</details>
 
 ### C Piscine C 03
 
