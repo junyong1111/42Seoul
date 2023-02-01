@@ -784,6 +784,342 @@ patch a sw.diff -o b
 <details>
 <summary> C 01 </summary>
 <div markdown="1">
+    
+1. **Exercise 00**
+
+- **포인터를 이용하여 해당 변수에 주소값을 참조하여 값 변경**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_ft(int *nbr);
+    
+    void	ft_ft(int *nbr)
+    {
+    	*nbr = 42;
+    }
+    ```
+    
+    - 주소값에 있는 데이터를 변경해야 하므로 * 연산 사용
+    
+1. **Exercise 01**
+
+- **포인터를 이용하여 해당 변수에 주소값을 참조하여 값 변경 (8중 포인터)**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_ultimate_ft(int *********nbr);
+    /*
+    int main()
+    {
+    	int p = 10;
+    	int *ptr = &p;
+    	int **ptr2 = &ptr;
+    	int ***ptr3 = &ptr2;
+    	int ****ptr4 = &ptr3;
+    	int *****ptr5 = &ptr4;
+    	int ******ptr6 = &ptr5;
+    	int *******ptr7 = &ptr6;
+    	int ********ptr8 = &ptr7;
+    	ft_ultimate_ft(&ptr8);
+    	return 0;
+    }
+    */
+    
+    void	ft_ultimate_ft(int *********nbr)
+    {
+    	*********nbr = 42;
+    }
+    ```
+    
+    - 주소값에 있는 데이터를 변경해야 하므로 * 연산 사용
+    
+1. **Exercise 02**
+
+- 2개의 **포인터를 이용하여 해당 변수에 주소값을 참조하여 값 변경**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_swap(int *a, int *b);
+    /*
+    int main()
+    {
+    	int a = 10;
+    	int b = 20;
+    	ft_swap(&a, &b);
+    	return 0;
+    }
+    */
+    
+    void	ft_swap(int *a, int *b)
+    {
+    	int	temp;
+    
+    	temp = *a;
+    	*a = *b;
+    	*b = temp;
+    }
+    ```
+    
+1. **Exercise 03**
+
+- **인자로 들어온** **포인터 해당 변수에 주소값을 참조하여 값 변경**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_div_mod(int a, int b, int *div, int *mod);
+    /*
+    int main()
+    {
+    	int a = 10;
+    	int b = 2;
+    	int div = 0;
+    	int mod = 0;
+    	ft_div_mod(a, b, &div, &mod);
+    	return 0;
+    }
+    */
+    
+    void	ft_div_mod(int a, int b, int *div, int *mod)
+    {
+    	*div = a / b;
+    	*mod = a % b;
+    }
+    ```
+    
+1. **Exercise 04**
+
+- **2개의 포인터를 이용하여 해당 변수에 주소값을 참조하여 값 변경**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_ultimate_div_mod(int *a, int *b);
+    /*
+    int main()
+    {
+    	int a = 10;
+    	int b = 5;
+    
+    	ft_ultimate_div_mod(&a,&b);
+    	return 0;
+    }
+    */
+    
+    void	ft_ultimate_div_mod(int *a, int *b)
+    {
+    	int	temp_a;
+    	int	temp_b;
+    
+    	temp_a = *a;
+    	temp_b = *b;
+    	*a = temp_a / temp_b;
+    	*b = temp_a % temp_b;
+    }
+    ```
+    
+1. **Exercise 05**
+
+- **write 함수를 이용하여 문자열 출력**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_putstr(char *str);
+    int		str_len(char *str);
+    /*
+    int main()
+    {
+    	char *str;
+    
+    	str = "Hello World";
+    	ft_putstr(str);
+    
+    	return 0;
+    }
+    */
+    
+    int	str_len(char *str)
+    {
+    	int		len;
+    	char	*temp;
+    
+    	temp = str;
+    	len = 0;
+    	while (*temp != 0)
+    	{
+    		len++;
+    		temp++;
+    	}
+    	return (len);
+    }
+    
+    void	ft_putstr(char *str)
+    {
+    	int	len;
+    
+    	len = str_len(str);
+    	write(1, str, len);
+    }
+    ```
+    
+1. **Exercise 06**
+
+- **인자로 들어온 문자열의 길이를 재는 함수 작성**
+    
+    ```c
+    #include <unistd.h>
+    
+    int	ft_strlen(char *str);
+    /*
+    int main()
+    {	
+    	char *str = "Hello World";
+    	int len = ft_strlen(str);
+    	write(1, str, len);
+    	return 0;
+    }
+    */
+    
+    int	ft_strlen(char *str)
+    {
+    	char	*temp;
+    	int		len;
+    
+    	len = 0;
+    	temp = str;
+    	while (*temp != 0)
+    	{
+    		len++;
+    		temp++;
+    	}
+    	return (len);
+    }
+    ```
+    
+1. **Exercise 07**
+
+- **인자로 들어온  문자열의 앞 뒤를 바꾸는 함수 작성**
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_rev_int_tab(int *tab, int size);
+    /*
+    int main()
+    {
+    	int arr[5];
+    	int *ptr;
+    	ptr = arr;
+    	int size = 5;
+    	for(int i=0; i<size; i++)
+    	{
+    		*ptr = i+1;
+    		ptr++;
+    	}
+    	ptr = arr;
+    	ft_rev_int_tab(ptr, size);
+    	
+    	return 0;
+    }
+    */
+    
+    void	ft_rev_int_tab(int *tab, int size)
+    {
+    	int	i;
+    	int	temp;
+    
+    	i = 0;
+    	temp = 0;
+    	while (i < size / 2)
+    	{
+    		temp = *(tab + size - i -1);
+    		*(tab + size - i -1) = *(tab + i);
+    		*(tab + i) = temp;
+    		i++;
+    	}
+    }
+    ```
+    
+1. **Exercise 08**
+
+- 1차원 배열의 원소들을 오름차순으로 정렬
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_sort_int_tab(int *tab, int size);
+    void	find_min_value_swap(int *arr, int size, int key, int idx);
+    void	swap_value(int *arr, int a, int b);
+    /*
+    int main()
+    {
+    	int arr[5];
+    	int *ptr = arr;
+    	int size = 5;
+    	for(int i=0; i<size; i++)
+    	{
+    		arr[i] = 100 - i ; 
+    	}
+    	ptr = arr;
+    	ft_sort_int_tab(arr, size);
+    	ptr = arr;
+    
+    	for(int i=0; i<size; i++)
+    	{
+    		printf("%d", *(arr+i));
+    	}
+    	return 0;
+    }
+    */
+    
+    void	swap_value(int *arr, int a, int b)
+    {
+    	int	temp;
+    
+    	temp = *(arr + a);
+    	*(arr + a) = *(arr + b);
+    	*(arr + b) = temp;
+    }
+    
+    void	find_min_value_swap(int *arr, int size, int key, int idx)
+    {
+    	int	min_idx;
+    	int	pre_idx;
+    
+    	pre_idx = idx -1;
+    	min_idx = pre_idx;
+    	while (size - idx)
+    	{
+    		if (key > *(arr + idx))
+    		{
+    			key = *(arr + idx);
+    			min_idx = idx;
+    		}
+    		idx++;
+    	}
+    	swap_value(arr, pre_idx, min_idx);
+    }
+    
+    void	ft_sort_int_tab(int *tab, int size)
+    {
+    	int	len;
+    	int	idx;
+    	int	key;
+    
+    	idx = 0;
+    	len = size -1;
+    	while (len--)
+    	{
+    		key = *(tab + idx);
+    		find_min_value_swap(tab, size, key, idx + 1);
+    		idx++;
+    	}
+    }
+    ```
 
 </div>
 </details>
