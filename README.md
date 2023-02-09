@@ -252,7 +252,7 @@ patch a sw.diff -o b
     ifconfig | grep -w "ether" | cut -d " " -f 2
     ```
     
-5. **Exercise 04**
+5. **Exercise 05**
 
 - **컴퓨터의 MAC 주소 확인**
     
@@ -269,7 +269,7 @@ patch a sw.diff -o b
     ifconfig | grep -w "ether" | cut -d " " -f 2
     ```
     
-6. **Exercise 05**
+6. **Exercise 06**
 
 - **파일 생성 규칙을 무시한 채 파일을 만드는 과제 (파일 생성 규칙 → 특수문자 사용금지)**
 - 42이라는 문자열만 포함하는 크기가 2바이트인 파일 생생
@@ -283,7 +283,7 @@ patch a sw.diff -o b
     echo -n 42 > \"\\\?\$\*\'\MaRViN\'\*\$\?\\\"
     ```
     
-7. **Exercise 06**
+7. **Exercise 07**
 
 - **ls -l 명령어의 첫 번째 행부터 시작하여 한 줄 걸러 보여주는 명령어 작성**
     
@@ -296,7 +296,7 @@ patch a sw.diff -o b
     #-- 현재 라인넘버를 몫이 0이 아니면 즉 혹수의 경우는 출력
     ```
     
-8. **Exercise 07**
+8. **Exercise 08**
 
 - **cat/etc/passwd 명령어의 출력 결과를 가공하여 출력**
     
@@ -334,7 +334,7 @@ patch a sw.diff -o b
     ```
     
 
-9. **Exercise 08**
+9. **Exercise 09**
 
 - 주어진 조건에 맞는 진수 변환 후 그 값을 연산하고 또 다른 조건을 밑으로 하는 문자로 출**력**
     
@@ -1130,6 +1130,504 @@ patch a sw.diff -o b
 <details>
 <summary> C 02  </summary>
 <div markdown="1">
+
+1. **Exercise 00**
+
+- **string.h에 포함되어 있는 strcpy 함수 구현**
+    - **strcpy :  (목적지 문자열, 소스 문자열)**
+        - **소스문자열에 있는 문자열을 목적지 문자열에 복사하는 함수**
+    
+    ```c
+    char	*ft_strcpy(char *dest, char *src);
+    /*
+    int main()
+    {
+    	char *str = "Hello World";
+    	char cp_str[15] = "World Hello!!";
+    
+    	ft_strcpy(cp_str, str);
+    	printf("%s",cp_str);
+    }
+    */
+    
+    char	*ft_strcpy(char *dest, char *src)
+    {
+    	int		i;
+    
+    	i = 0;
+    	while (src[i] != '\0')
+    	{
+    		dest[i] = src[i];
+    		i++;
+    	}
+    	dest[i] = '\0';
+    	return (dest);
+    }
+    ```
+    
+    - 소스문자열의 끝까지 반복문 진행
+    - 목적지 문자열에 소스 문자열을 하나씩 대입
+    - 마지막 목적지 문자열 반환
+    
+    —#  해당 함수는 NULL을 보장하지 않기 때문에 NULL을 제거해도 상관없음
+    
+1. **Exercise 01**
+
+- **string.h에 포함되어 있는 strncpy 함수 구현**
+    - **strcpy :  (목적지 문자열, 소스 문자열, 크기)**
+        - **소스문자열에 있는 문자열을 목적지 문자열에 주어진 크기만큼 복사하는 함수**
+    
+    ```c
+    char	*ft_strncpy(char *dest, char *src, unsigned int n);
+    /*
+    int main()
+    {
+    	char src[7] = "hello ";
+    	//char dest[12];
+    	char dest[12] = "HELLO WORLD";
+    
+    	ft_strncpy(dest, src, 1);
+    	printf("%s\n", dest);
+    	return 0;
+    }
+    */
+    
+    char	*ft_strncpy(char *dest, char *src, unsigned int n)
+    {
+    	unsigned int	i;
+    	int				check ;
+    
+    	check = 0;
+    	i = 0;
+    	while (i < n)
+    	{
+    		if (src[i] == '\0')
+    		{
+    			check = 1;
+    			break ;
+    		}
+    		dest[i] = src[i];
+    		i++;
+    	}
+    	if (check == 1)
+    		while (i < n)
+    			dest[i++] = '\0';
+    	return (dest);
+    }
+    ```
+    
+    - 주어진 횟수만큼 반복문을 진행
+        - 진행도중 소스문자열이 끝나면 중단 후 확인
+    - 반복문을 돌면서 소스문자열에 있는 문자를 목적지 문자열에 하나씩 대입
+    - 만약 소스문자열이 짧아서 먼저 끝난경우 나머지 크기만큼 목적지 문자열에 NULL값 대입
+    - 목적지 문자열 리턴
+    
+1. **Exercise 02**
+
+- **해당 문자열이 알파벳만 포함되어 있는지 확인하는 함수 작성**
+    
+    ```c
+    int	ft_str_is_alpha(char *str);
+    /*
+    int main()
+    {
+    	char str[10] = "";
+    	printf("%d\n", ft_str_is_alpha(str));
+    	return 0;
+    }
+    */
+    
+    int	ft_str_is_alpha(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	if (*temp == 0)
+    		return (1);
+    	while (*temp != 0)
+    	{
+    		if ((*temp >= 'a' && *temp <= 'z') || (*temp >= 'A' && *temp <= 'Z'))
+    			temp++;
+    		else
+    			return (0);
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 알파벳이 포함되어 있지 않은 경우는 멈추고 알파벳이 포함되어 있는 경우에는 전진
+1. **Exercise 03**
+
+- **해당 문자열이 숫자만 포함되어 있는지 확인하는 함수 작성**
+    
+    ```c
+    int	ft_str_is_numeric(char *str);
+    /*
+    int main()
+    {
+    	char str[10] = "13123010";
+    	printf("%d\n", ft_str_is_alpha(str));
+    
+    	return 0;
+    }
+    */
+    
+    int	ft_str_is_numeric(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	while (*temp != 0)
+    	{
+    		if (*temp >= '0' && *temp <= '9')
+    		{
+    			temp++;
+    		}
+    		else
+    			return (0);
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 숫자가 포함되어 있지 않은 경우는 멈추고  숫자가 포함되어 있다면 전진
+1. **Exercise 04**
+
+- **해당 문자열이 소문자 알파벳만 포함되어 있는지 확인하는 함수 작성**
+    
+    ```c
+    int	ft_str_is_lowercase(char *str);
+    
+    /*
+    int main()
+    {	
+    	//char str[10] = "dasdasd0";
+    	char str = 0;
+    	printf("%d\n", ft_str_is_lowercase(&str));
+    	return 0;
+    }
+    */
+    
+    int	ft_str_is_lowercase(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	if (*temp == 0)
+    		return (1);
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 'a' && *temp <= 'z')
+    			temp++;
+    		else
+    			return (0);
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 소문자 이외의 문자가 들어오면 중단 소문자가 들어오면 전진
+1. **Exercise 05**
+
+- **해당 문자열이 대문자 알파벳만 포함되어 있는지 확인하는 함수 작성**
+    
+    ```c
+    int	ft_str_is_uppercase(char *str);
+    /*
+    int main()
+    {
+    	char str[10] = "ABCDEFG";
+    	printf("%d\n", ft_str_is_uppercase(str));
+    
+    	return 0;
+    }
+    */
+    
+    int	ft_str_is_uppercase(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	if (*temp == 0)
+    		return (1);
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 'A' && *temp <= 'Z')
+    		{
+    			temp++;
+    		}
+    		else
+    			return (0);
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 대문자 이외의 문자가 들어오면 중단 대문자가 들어오면 전진
+1. **Exercise 06**
+
+- **해당 문자열이 출력 가능한 문자만 포함되어 있는지 확인하는 함수 작성**
+    
+    ```c
+    int	ft_str_is_printable(char *str);
+    /*
+    int main()
+    {
+    	char str[10] = "dada";
+    	char ch ;
+    	ch = 128;
+    	printf("%d\n", ft_str_is_printable(&ch));
+    	printf("%d\n", ft_str_is_printable(str));
+    	return 0;
+    }
+    */
+    
+    int	ft_str_is_printable(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	if (*temp == 0)
+    		return (1);
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 32 && *temp <= 126)
+    			temp++;
+    		else
+    			return (0);
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 아스키코드 표를 참조해보면 출력 가능한 문자열은 32~126인걸 확인할 수 있음
+    - 그 외의 값이 들어오면 종료
+1. **Exercise 07**
+
+- **해당 문자열의 알파벳을 모두 대문자로 바꾸는 함수 작성**
+    
+    ```c
+    char	*ft_strupcase(char *str);
+    /*
+    int main()
+    {
+    	char str[15] = "hello world!!";
+    	printf("%s\n", ft_strupcase(str));
+    	return 0;
+    }	
+    */
+    
+    char	*ft_strupcase(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 'a' && *temp <= 'z')
+    		{
+    			*temp = *temp - 32;
+    		}
+    		temp++;
+    	}
+    	temp = str;
+    	return (temp);
+    }
+    ```
+    
+    - 해당 글자가 대문자라면 해당 글자에서 - 32(아스키표 참조)를 하면 소문자로 변경 가능
+1. **Exercise 08**
+
+- **해당 문자열의 알파벳을 모두 소문자로 바꾸는 함수 작성**
+    
+    ```c
+    char	*ft_strlowcase(char *str);
+    
+    /*
+    int main()
+    {
+    
+    	char str[15] = "HELLO WORLD!!";
+    	printf("%s\n", ft_strlowcase(str));
+    	return 0;
+    }
+    */
+    
+    char	*ft_strlowcase(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 'A' && *temp <= 'Z')
+    			*temp = *temp + 32;
+    		temp ++;
+    	}
+    	temp = str;
+    	return (temp);
+    }
+    ```
+    
+    - 해당 글자가 소문자라면 해당 글자에서  + 32(아스키표 참조)를 하면 대문자로 변경 가능
+
+1.  **Exercise 09**
+
+- 각 단어의 첫 번째 글자를 대문자로 바꾸고 나머지 글자는 소문자로 바꾸는 함수 작성
+    
+    ```c
+    char	*ft_strcapitalize(char *str);
+    int		check_word(char ch);
+    int		check_lower_alpha(char ch);
+    
+    int	check_lower_alpha(char ch)
+    {
+    	if (ch >= 'a' && ch <= 'z')
+    		return (1);
+    	else
+    		return (0);
+    }
+    
+    int	check_word(char ch)
+    {
+    	if (ch >= 48 && ch <= 57)
+    		return (1);
+    	if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'))
+    		return (1);
+    	else
+    		return (0);
+    }
+    
+    char	*ft_strcapitalize(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	if (*temp != 0 && (*temp >= 'a' && *temp <= 'z'))
+    	{
+    		*temp = *temp - 32;
+    		temp++;
+    	}
+    	while (*temp != 0)
+    	{
+    		if (*temp >= 'A' && *temp <= 'Z')
+    			*temp = *temp + 32;
+    		if (check_word(*(temp -1)) == 0 && check_lower_alpha(*temp) == 1)
+    			*temp = *temp - 32;
+    		temp++;
+    	}
+    	temp = str;
+    	return (str);
+    }
+    ```
+    
+    - 해당 문자가 숫자 또는 알파벳인지 확인 하는 함수
+    - 해당 문자가 소문자인지만 확인하는 함수
+    - 1번째 문자는 예외처리 후 시작
+    - 만약 자신의 앞의 글자가 문자가 아니며 자신이 소문자라면 그 문자를 대문자로 변경
+    
+1.  **Exercise 10**
+
+- string.h파일에 있는 strlcpy 함수 작성
+    
+    ```c
+    unsigned int	ft_strlcpy(char *dest, char *src, unsigned int size);
+    /*
+    int main()
+    {
+    	char str[8] = "World!!";
+    	char dest[6] = "hello";
+    	int size = 8;
+    	int len = ft_strlcpy(dest, str, size);
+    	printf("Str is %s And StrLen is %d\n", dest, len);
+    	return 0;
+    }
+    */
+    
+    unsigned int	ft_strlcpy(char *dest, char *src, unsigned int size)
+    {
+    	unsigned int	i;
+    	int				len;
+    
+    	len = 0;
+    	while (src[len] != 0)
+    		len ++;
+    	if (size == 0)
+    		return (len);
+    	i = 0;
+    	while (i < size -1 && src[i])
+    	{
+    		dest[i] = src[i];
+    		i++;
+    	}
+    	dest[i] = '\0';
+    	return (len);
+    }
+    ```
+    
+    - 기존 strncpy와의 차이점은 마지막에 NULL값을 보장해준다는 점이다.
+
+12.  **Exercise 11**
+
+- 출력가능한 문자열을 출력하며 출력할 수 없는 문자는 역 슬래쉬 뒤에 16진법 형태로 출력하는 함수 작성
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_putstr_non_printable(char *str);
+    int		is_printable(unsigned char ch);
+    void	print_unprintable(unsigned char ch);
+    /*
+    int main()
+    {
+    	char * str = "Coucou\ntu vas bien ?";
+    	ft_putstr_non_printable(str);
+    	return 0;
+    }
+    */
+    
+    int	is_printable(unsigned char ch)
+    {
+    	if (ch >= 32 && ch <= 126)
+    		return (1);
+    	else
+    		return (0);
+    }
+    
+    void	print_unprintable(unsigned char ch)
+    {
+    	char	*base;
+    	int		i;
+    
+    	i = ch;
+    	base = "0123456789abcdef";
+    	write(1, &base[ch / 16], 1);
+    	write(1, &base[ch % 16], 1);
+    }
+    
+    void	ft_putstr_non_printable(char *str)
+    {
+    	char	*temp;
+    
+    	temp = str;
+    	while (*temp != 0)
+    	{
+    		if (is_printable(*temp) == 1)
+    		{
+    			write(1, temp, 1);
+    		}
+    		else
+    		{
+    			write(1, "\\", 1);
+    			print_unprintable((unsigned char)*temp);
+    		}
+    		temp++;
+    	}
+    }
+    ```
+    
+    - 해당 문자가 출력이 가능하다면 그냥 출력
+    - 해당 문자가 출력이 불가능하다면 해당 문자열의 값을 16진법 베이스로 나누기 연산 진행
 
 </div>
 </details>
