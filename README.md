@@ -1995,6 +1995,346 @@ patch a sw.diff -o b
 <summary>  C 04  </summary>
 <div markdown="1">
 
+1. **Exercise 00**
+
+- **문자열의 길이를 반환하는 함수 작성**
+    - 문자열 배열을 입력받아 그 배열의 길이를 반환해주는 함수
+    
+    ```c
+    int	ft_strlen(char *str);
+    
+    int	ft_strlen(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len ++;
+    	return (len);
+    }
+    ```
+    
+    - 문자열 한개를 입력받아 그 문자의 끝까지 갈때까지 반복문을 진행
+    - 한 번 진행 시 길이를 1개씩 증가
+    
+1. **Exercise 01**
+
+- 표준 출력에서 문자열을 출력하는 함수 작성
+    
+    ```c
+    #include <unistd.h>
+    
+    void	ft_putstr(char *str);
+    
+    void	ft_putstr(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len ++;
+    	write(1, str, len);
+    }
+    ```
+    
+    - 위와 같이 문자열의 길이를 계산 후
+    - write()함수를 이용하여 길이만큼 문자열을 출력
+    
+1. **Exercise 02**
+
+- 인자로 받은 정수값을 문자열로 변환하는 함수 작성
+    - int 자료형 표현 범위 전부를 표현할 수 있어야 함
+
+```c
+#include <unistd.h>
+
+void	ft_putnbr(int nb);
+int		number_len(int nb);
+int		check_minus(int number);
+void	integer_to_string(int nb);
+/*
+int main(){
+	ft_putnbr(-150);
+	return 0;
+}
+*/
+
+void	integer_to_string(int nb)
+{
+	char	str[11];
+	int		len;
+	int		temp;
+
+	len = number_len(nb);
+	temp = len;
+	while (nb != 0)
+	{
+		str[len - 1] = '0' + (nb % 10);
+		nb = nb / 10;
+		len--;
+	}
+	write(1, str, temp);
+}
+
+int	check_minus(int number)
+{
+	if (number < 0)
+		return (1);
+	else
+		return (0);
+}
+
+int	number_len(int nb)
+{
+	int	len;
+	int	temp;
+
+	len = 0;
+	if (check_minus(nb) == 1)
+	{
+		nb = nb * -1;
+	}
+	temp = nb;
+	while (temp != 0)
+	{
+		len ++;
+		temp = temp / 10;
+	}
+	return (len);
+}
+
+void	ft_putnbr(int nb)
+{
+	int		len;
+	int		check;
+
+	len = number_len(nb);
+	if (nb == -2147483648)
+	{
+		write(1, "-", 1);
+		write(1, "2147483648", 10);
+		return ;
+	}
+	if (nb == 0)
+	{
+		write(1, "0", 1);
+		return ;
+	}
+	check = check_minus(nb);
+	if (check == 1)
+	{
+		nb = nb * -1;
+		write(1, "-", 1);
+	}
+	integer_to_string(nb);
+}
+```
+
+- 입력받은 값이 int자료형의 최소 범위 이거나 0인경우 예외 처리
+- 이후 입력받은 값의 부호를 확인하는 check_minus함수 사용
+- 절댓값을 씌우고 integer_to_string함수 실행
+    - 나머지 연산을 통해 배열의 뒷부분부터 하나씩 배열에 삽입
+    - 이후 출력
+
+1. **Exercise 03**
+
+- **string.h에 포함되어 있는 strncat 함수 구현**
+    - **strncat :  (목적지 문자열, 소스 문자열, 크기)**
+        - 소스문자열을 목적지 문자열에 **주어진 크기**만큼 복사하는 함수
+    
+    ```c
+    
+    char	*ft_strncat(char *dest, char *src, unsigned int nb);
+    /*
+    int main()
+    {
+    	char dest1[20] = "Hello";
+    	char src1[20] = " World";
+    
+    	char dest2[20] = "Hello";
+    	char src2[20] = " World";
+    	
+    	int n = 15;
+    
+    	printf("My Func is %s\n", ft_strncat(dest1, src1, n));
+    	printf("C  Func is %s\n", strncat(dest2, src2, n));
+    
+    	return 0;
+    }
+    */
+    
+    char	*ft_strncat(char *dest, char *src, unsigned int nb)
+    {
+    	char				*temp;
+    	unsigned int		i;
+    
+    	i = 0;
+    	temp = dest;
+    	if (nb == 0)
+    		return (dest);
+    	while (*temp != 0)
+    		temp++;
+    	while (i < nb && *(src + i))
+    		*temp++ = *(src + i++);
+    	*temp = '\0';
+    	temp = dest;
+    	return (temp);
+    }
+    ```
+    
+    - 복사할 크기가 0이라면 예외처리 ( 마지막 while문으로 인해 굳이 할 필요는 없지만 불필요한 연산을 막기위해)
+    - 임시 변수에 목적지 문자열에 주소를 담고 NULL까지 포인터 전진
+    - 주어진 크기만큼 갔거나 더이상 복사할 소스문자열이 없는 경우 멈춤
+        - **소~~스문자열의 부족**으로 **인한 중단** 시 **나머지 부분은 공백**으로 채워주어야 한다.~~
+    - **마지막 문자 공백 추가**
+    
+1. **Exercise 04**
+
+- **string에 있는 특정 문자열을 찾는 함수 구현**
+    - **strstr :  (문자열, 문자패턴)**
+        - **주어진 문자열에서 특정 문자패턴을 찾아서 문자열의 첫번째 인덱스를 반환**
+    
+    ```c
+    char	*ft_strstr(char *str, char *to_find);
+    int		find_string(char *str, char *to_find, int i, int j);
+    /*
+    int main()
+    {
+    
+    	char	*string1 = "needle in a haystack";
+    	char	*string2 = "haystack";
+    	printf("My Func Answer is : %s\n", ft_strstr(string1, string2));
+    	char	*string_1 = "needle in a haystack";
+    	char	*string_2 = "haystack";
+    	printf("C  Func Answer is : %s\n", strstr(string_1, string_2));
+    	return 0;
+    }
+    */
+    
+    int	find_string(char *str, char *to_find, int i, int j)
+    {
+    	int	check;
+    
+    	check = 1;
+    	while (to_find[j] != 0)
+    	{
+    		if (*(str + i + j) == to_find[j])
+    		{
+    			j++;
+    			check = 1;
+    		}
+    		else
+    		{
+    			check = 0;
+    			break ;
+    		}
+    	}
+    	return (check);
+    }
+    
+    char	*ft_strstr(char *str, char *to_find)
+    {
+    	int	i;
+    	int	check;
+    
+    	if (*to_find == 0)
+    		return (str);
+    	i = 0;
+    	while (*(str + i) != 0)
+    	{
+    		check = 0;
+    		if (*(str + i) == to_find[0])
+    			check = find_string(str, to_find, i, 1);
+    		if (check == 1)
+    			return (str + i);
+    		i++;
+    	}
+    	return (0);
+    }
+    ```
+    
+    - 주어진 문자패턴이 NULL인 경우 본래 문자를 반환
+    - 문자열을 하나씩 탐색시작
+        - 탐색한 문자열이 문자패턴의 첫글자와 일치한다면 find_string함수 실행
+    - find_string(문자열, 문자패턴, 탐색한 문자열의 패턴 시작, 0);
+        - 문자패턴이 0부터 시작이고 이미 일치했다는 사실을 알고있으므로 1증가한 상태에서부터 문자패턴 탐색 시작
+            - i : 현재 문자열 과 다음 문자열의 패턴이 동일하다면 flag =1, 전진
+            - 틀리다면 플래그 = 0, 중단
+        - 모든 패턴을 탐색했을 때도 중단되지 않았다면 문자를 찾음
+    
+1. **Exercise 05**
+
+- **string에 있는 원하는 길이만큼의 문자열을 더해주는 함수 구현**
+    - **strlcat :  (목적지 문자열, 소스문자열,  크기 )**
+        - 목적지 문자열에 소스문자열을 주어진 크기만큼 더해주는 함수이며 반환값은 int
+        - **여기서 크기는 반드시 목적지 문자열 + 소스 문자열 + NULL문자가 포함되는 길이  이상이어야한다.**
+    
+    ```c
+    unsigned int	ft_strlcat(char *dest, char *src, unsigned int size);
+    int				str_len(char *str);
+    /*
+    int main()
+    {
+    
+    	char dest[20] = "123";
+    	char src[20] = "456789";
+    
+    	char dest1[20] = "123";
+    	char src2[20] = "456789";
+    
+    	int size = 7;
+    	printf("My F Answer is : %u \n", ft_strlcat(dest, src, size));
+    	printf("My F Answer is : %s \n",dest);
+    	printf("C  F Answer is : %lu \n", strlcat(dest1, src2, size));
+    	printf("C  F Answer is : %s \n", dest1);
+    	return 0;
+    }
+    */
+    
+    int	str_len(char *str)
+    {
+    	char	*temp;
+    	int		len;
+    
+    	temp = str;
+    	len = 0;
+    	while (*temp != 0)
+    	{
+    		len++;
+    		temp++;
+    	}
+    	return (len);
+    }
+    
+    unsigned int	ft_strlcat(char *dest, char *src, unsigned int size)
+    {
+    	unsigned int	i;
+    	unsigned int  dest_len;
+    	unsigned int  src_len;
+    
+    	dest_len = str_len(dest);
+    	src_len = str_len(src);
+    	i = 0;
+    	if (size <= dest_len)
+    		return (src_len + size);
+    	while (i + dest_len + 1 < size)
+    	{
+    		dest[dest_len + i] = src[i];
+    		i++;
+    	}
+    	dest[dest_len + i] = '\0';
+    	return (src_len + dest_len);
+    }
+    ```
+    
+    - 만약 주어진 크기가 목적지 문자열 조차 담지 못하는 크기가 주어진다면 아무런 행동도 하지 않고 (소스 문자열의 길이 + 크기) 반환
+    - 주어진 크기가 충분하다면 목적지 문자열에 해당 소스문자열을 하나씩 대입
+    
+    —# 여기서 크기는 NULL문자를 보장해주기 때문에 크기는 항상 -1을 해야한다.
+    
+    - 마지막에는 NULL문자를 반환
+        - 정상 종료 시 소스 문자열 + 목적지 문자열을 반환
+        
 </div>
 </details>
 
