@@ -2954,6 +2954,181 @@ void	ft_putnbr(int nb)
 <summary> C 06  </summary>
 <div markdown="1">
 
+1. **Exercise 00**
+
+- **실행함수에서 인자를 받아 프로그램 이름을 출력하는 파일 작성**
+    
+    ```c
+    #include <unistd.h>
+    
+    int	main(int argc, char **argv)
+    {
+    	int	idx;
+    
+    	idx = 0;
+    	if (argc != 1)
+    		return (0);
+    	while (argv[0][idx] != 0)
+    		write(1, &argv[0][idx++], 1);
+    	write(1, "\n", 1);
+    	return (0);
+    }
+    ```
+    
+    - argc가 1이 아닌경우는 예외
+    - 현재 argv에는 0번에는 프로그램이름 이후로는 들어온 문자열들이 저장되어 있음
+    - 프로그램이름은 0번 인덱스에 존재하므로 0번인덱스에 있는 문자열 값을 출력
+    
+2. **Exercise 01**
+
+- 실행함수에서 인자를 받아 받은 문자열을 순서대로 출력
+    - 프로그램 이름은 예외 시켜야 함
+    
+    ```c
+    #include <unistd.h>
+    
+    int	main(int argc, char **argv)
+    {
+    	int	i;
+    	int	j;
+    
+    	i = 1;
+    	while (i < argc)
+    	{
+    		j = 0;
+    		while (argv[i][j] != 0)
+    		{
+    			write(1, &argv[i][j], 1);
+    			j++;
+    		}
+    		write(1, "\n", 1);
+    		i++;
+    	}
+    	return (0);
+    }
+    ```
+    
+    - 각각 argv 1번 인덱스부터 존재하는 문자열을 반복문을 이용하여 하나씩 출력
+    
+3. **Exercise 02**
+
+- 실행함수에서 인자로 받은 문자열을 역순으로 출력
+- 로그램 이름은 예외
+    
+    ```c
+    #include <unistd.h>
+    
+    int	main(int argc, char **argv)
+    {
+    	int	i;
+    	int	j;
+    
+    	i = argc -1;
+    	while (i > 0)
+    	{
+    		j = 0;
+    		while (argv[i][j] != 0)
+    		{
+    			write(1, &argv[i][j], 1);
+    			j++;
+    		}
+    		write(1, "\n", 1);
+    		i--;
+    	}
+    	return (0);
+    }
+    ```
+    
+    - 0번 프로그램이름은 제외해야하므로 -1 만큼 반복
+    - argv에 맨 뒤 인덱스부터 반복문을 사용하여 문자열을 하나씩 출력
+    
+4. **Exercise 03**
+
+- 실행함수에서 인자로 받은 문자열을 아스키코드에 맞게 정렬
+- 프로그램이름은 제외해야함
+    
+    ```c
+    #include <unistd.h>
+    
+    void	str_swap(char **argv, int i, int j);
+    void	print_argv(int argc, char **argv);
+    void	sort_ascii(int argc, char **argv);
+    int		ft_strcmp(char *s1, char *s2);
+    
+    int	main(int argc, char **argv)
+    {
+    	sort_ascii(argc, argv);
+    	print_argv(argc, argv);
+    	return (0);
+    }
+    
+    void	print_argv(int argc, char **argv)
+    {
+    	int	i;
+    	int	idx;
+    
+    	i = 0;
+    	while (++i < argc)
+    	{
+    		idx = 0;
+    		while (argv[i][idx] != 0)
+    		{
+    			write(1, &argv[i][idx], 1);
+    			idx++;
+    		}
+    		write(1, "\n", 1);
+    	}
+    }
+    
+    void	sort_ascii(int argc, char **argv)
+    {
+    	int	i;
+    	int	j;
+    
+    	i = 0;
+    	while (i + 2 < argc)
+    	{
+    		j = 2;
+    		while (j < argc - i)
+    		{
+    			if (ft_strcmp(argv[j -1], argv[j]) > 0)
+    				str_swap(argv, j -1, j);
+    			j++;
+    		}
+    		i++;
+    	}
+    }
+    
+    void	str_swap(char **argv, int i, int j)
+    {
+    	char	*tmp;
+    
+    	tmp = argv[i];
+    	argv[i] = argv[j];
+    	argv[j] = tmp;
+    }
+    
+    int	ft_strcmp(char *s1, char *s2)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (s1[i] != 0 || s2[i] != 0)
+    	{
+    		if (s1[i] != s2[i])
+    			break ;
+    		i++;
+    	}
+    	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+    }
+    ```
+    
+    - 두 개의 문자열의 차이를 비교해주는 strcm함수를 사용하여 문자열의 차이를 계산
+        - 이 때 양수이면 먼저 온 문자열의 아스키값이 더 크다는 의미
+    - argv를 순회하면서 버블 정렬 진행
+        - strcmp값이 양수이면 스왑 진행
+    - 이후 정렬된 값들을 하나씩 출력
+
 </div>
 </details>
 
@@ -2962,6 +3137,688 @@ void	ft_putnbr(int nb)
 <details>
 <summary> C 07  </summary>
 <div markdown="1">
+
+1. **Exercise 00**
+
+- **string.h에 포함되어 있는 strdup 함수 구현**
+    - **strdup :  (복사할 문자열)**
+        - 문자열 복사에 사용하는 함수이며 strcpy와의 차이점으로는 문자열을 복사한 후 복사된 문자열을 가르키는 포인터를 반환하는 점이다.
+        - strcpy의 단점을 개선한 함수이며 복사할 문자열이 복사될 문자열 공간보다 크면 복사하는 도중에 문자열이 짤린다는 단점을 포인터를 사용하여 개선한것이다.
+    
+    ```c
+    #include <stdlib.h>
+    
+    char	*ft_strdup(char *src);
+    int		str_len(char *str);
+    /*
+    #include <stdio.h>
+    #include <string.h>
+    int main()
+    {
+    	char *str = "Hello World!!";
+    	char *c_func = strdup(str);
+    	char *my_func = ft_strdup(str);
+    
+    	printf("C  Function Answer is [%s]\n", c_func);
+    	printf("My Function Answer is [%s]\n", my_func);
+    
+    	return 0;
+    }
+    */
+    
+    int	str_len(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len++;
+    	return (len);
+    }
+    
+    char	*ft_strdup(char *src)
+    {
+    	char	*tmp;
+    	int		len;
+    	int		i;
+    
+    	len = str_len(src);
+    	tmp = (char *)malloc(sizeof(char) * len + 1);
+    	if (!(tmp))
+    		return (NULL);
+    	i = 0;
+    	while (i < len)
+    	{
+    		tmp[i] = src[i];
+    		i++;
+    	}
+    	tmp[i] = '\0';
+    	return (tmp);
+    }
+    ```
+    
+    - 두 개의 문자열중 하나라도 끝날때까지 반복 진행
+    - 두 개의 문자가 다르다면불필요한 연산을 멈추고 그 차이값을 반환
+    
+    —# 주의해야할 점 : s1문자열뿐 아니라 s2문자열이 먼저 끝나는 상황도 조심해야 함
+    
+2. **Exercise 01**
+
+- **1차원 배열을 동적할당 받고 초기화 한 후 그 주소값을 반환하는 함수 작성**
+    - ***range(int min, int max)**
+    
+    ```c
+    #include <stdlib.h>
+    
+    int	*ft_range(int min, int max);
+    /*
+    #include <stdio.h>
+    
+    int main()
+    {
+    	int min = 10000;
+    	int max = 100;
+    	int *arr = ft_range(min, max);
+    	int size = max - min;
+    
+    	for(int i=0; i<size; i++)
+    		printf("%d ", arr[i]);
+    	printf("\n");
+    	return 0;
+    }
+    */
+    
+    int	*ft_range(int min, int max)
+    {
+    	long long	size;
+    	int			*arr;
+    	int			idx;
+    
+    	if (min >= max)
+    		return (NULL);
+    	size = max - min;
+    	arr = (int *)malloc(sizeof(int) * size);
+    	if (!(arr))
+    		return (NULL);
+    	idx = 0;
+    	while (idx < size)
+    		arr[idx++] = min++;
+    	return (arr);
+    }
+    ```
+    
+    - 만약 주어진 최솟값이 더 크다면 예외처리
+    - 이후 최댓값 - 최솟값으로 배열의 사이즈를 계산
+        - 이 때 long long으로 하면 더 안전함
+    - 해당 크기의 배열을 동적 할당 만약 실패 시 널가드
+    - 반복문을 돌면서 해당 배열에 값 초기화 후 주소값 반환
+    
+3. **Exercise 02**
+
+- **1차원 포인터의 주소값을 전달받아 그 포인터의 주소값을 참조하여 1차원 배열 동적 할당**
+    - **ultimate_range(int **range, int min, int max)**
+    - 2번 함수같은 경우는 1차원 배열을 할당받아 그 주소값을 반환하는 함수였다면 해당 함수는 1차원 포인터의 주소값을 받아 1차원 포인터의 주소값을 참조하여 할당
+    
+    ```c
+    #include <stdlib.h>
+    
+    int	ft_ultimate_range(int **range, int min, int max);
+    
+    int	ft_ultimate_range(int **range, int min, int max)
+    {
+    	long long	size;
+    	int			idx;
+    
+    	if (min >= max)
+    		return (0);
+    	size = max - min;
+    	(*range) = (int *)malloc(sizeof(int) * size);
+    	if ((*range) == 0)
+    		return (-1);
+    	idx = -1;
+    	while (++idx < size)
+    		(*range)[idx] = min++;
+    	return (size);
+    }
+    ```
+    
+    - 일반적인 포인터를 사용하여 주소값을 변경하는것과 마찬가지
+    - 단지 포인터 1개가 더 붙었다고 생각하면 어렵지 않게 할당 가능
+    
+4. **Exercise 03**
+
+- **문자열 배열이 들어있는 2차원 문자열 배열을 매개변수로 받아 해당 문자열 배열의 값들을 전달받은 구분자를 이용하여 1차원 문자열로 반환해주는 함수 작성**
+    - ***strjoin(int size, char **strs, char *sep)**
+    
+    ```c
+    #include  <stdlib.h>
+    
+    char	*ft_strjoin(int size, char **strs, char *sep);
+    int		ft_len(char	**strs, int sep_len, int size);
+    int		ft_str_len(char *str);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	char *str1 = "HELLO";
+    	char *str2= "WORLD";
+    	char *str3 = "42";
+    	char *str4 = "SEOUL";
+    	char * sep = "!__!";
+    	char ** arr_str = (char **)malloc(sizeof(char *) *5 );
+    	arr_str[0] = str1;
+    	arr_str[1] = str2;
+    	arr_str[2] = str3;
+    	arr_str[3] = str4;
+    	arr_str[4] = "";
+    	printf("ANSWER IS [%s]\n", ft_strjoin(4, arr_str, sep));
+    }
+    */
+    
+    int	ft_str_len(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len++;
+    	return (len);
+    }
+    
+    int	ft_len(char	**strs, int sep_len, int size)
+    {
+    	int	i;
+    	int	j;
+    	int	len;
+    
+    	i = 0;
+    	len = 0;
+    	while (i < size)
+    	{
+    		j = 0;
+    		while (strs[i][j] != 0)
+    		{
+    			len ++;
+    			j++;
+    		}
+    		i++;
+    		if (i + 1 != size)
+    			len = len + sep_len;
+    	}
+    	return (len);
+    }
+    
+    char	*ft_strjoin(int size, char **strs, char *sep)
+    {
+    	char	*cat_str;
+    	char	*str_tmp;
+    	int		idx;
+    	int		i;
+    	int		sep_len;
+    
+    	sep_len = ft_str_len(sep);
+    	cat_str = (char *)malloc(sizeof(char) * (ft_len(strs, sep_len, size) + 1));
+    	if (!(cat_str))
+    		return (NULL);
+    	i = -1;
+    	str_tmp = cat_str;
+    	while (strs[++i] != 0 && i < size)
+    	{
+    		idx = 0;
+    		while (strs[i][idx] != 0)
+    			*str_tmp++ = strs[i][idx++];
+    		idx = 0;
+    		while (i + 1 != size && idx < sep_len)
+    			*str_tmp++ = sep[idx++];
+    	}
+    	*str_tmp = '\0';
+    	str_tmp = cat_str;
+    	return (str_tmp);
+    }
+    ```
+    
+    - 전달 받은 2차원 문자열의 배열에 모든 문자 + 구분자 문자열이 들어갈 수 있는 공간을 할당받아야 하므로 해당 문자열의 길이를 확인
+    
+    —# 마지막 구분자는 포함되지 않으므로 마지막 구분자 길이는 제외해야 함
+    
+    - 해당 사이즈만큼 동적할당을 받은 후 할당이 안된 경우에는 널가드
+    - 이후 할당받은 문자열에 값을 하나씩 옮겨담은 후 구분자 추가
+    - 마지막에는 NULL문자 포함
+    
+    —# 동적할당을 받을 때 크기는 항상 괄호로 묶어주어야 제대로 할당이 된다.
+    
+5. **Exercise 04**
+
+- **4번과제에서 진행했던 ptr_nbr_base와 atoi_base를 합친 함수 작성**
+    - **convert_base(char *nbr, char *base_from, char *base_to)**
+        - 지난 과제에서 했던 atoi_base를 그대로 가져와서 사용
+        - 해당 과제는 파일이 2개까지 가능
+    
+    ```c
+    //conver_base.c
+    int		ft_atoi_base(char *str, char *base);
+    int		check_exception(char *base);
+    int		number_to_base(char *str, char	*base);
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base);
+    int		base_possible(char	*base, char ch);
+    
+    int	base_possible(char	*base, char ch)
+    {
+    	int	idx;
+    
+    	idx = 0;
+    	while (base[idx] != 0)
+    	{
+    		if (base[idx] == ch)
+    			return (idx);
+    		idx++;
+    	}
+    	return (-1);
+    }
+    
+    int	number_to_base(char	*str, char *base)
+    {
+    	int	base_value;
+    	int	idx;
+    	int	value;
+    
+    	base_value = 0;
+    	idx = 0;
+    	value = 0;
+    	while (base[base_value])
+    		base_value++;
+    	while (*str != 0)
+    	{
+    		idx = base_possible(base, *str);
+    		if (idx == -1)
+    			break ;
+    		value = value * base_value;
+    		value = value + idx;
+    		str++;
+    	}
+    	return (value);
+    }
+    
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base)
+    {
+    	int	cnt;
+    
+    	cnt = 0;
+    	while (*str == '-' || *str == '+')
+    	{
+    		if (*str == '-')
+    			cnt++;
+    		str++;
+    	}
+    	if (cnt % 2 == 0)
+    		*check = 0;
+    	else
+    		*check = 1;
+    	*value = number_to_base(str, base);
+    	return (str);
+    }
+    
+    int	check_exception(char *base)
+    {
+    	int	i;
+    	int	j;
+    	int	len;
+    
+    	len = 0;
+    	while (base[len] != 0)
+    		len++;
+    	if (len == 0 || len == 1)
+    		return (-1);
+    	i = -1;
+    	while (++i < len)
+    	{
+    		j = i;
+    		if (base[i] == '-' || base[i] == '+')
+    			return (-1);
+    		if ((base[i] >= 9 && base[i] <= 13) || base[i] == 32)
+    			return (-1);
+    		while (++j < len)
+    			if (base[i] == base[j])
+    				return (-1);
+    	}
+    	return (len);
+    }
+    
+    int	ft_atoi_base(char *str, char *base)
+    {
+    	int		len;
+    	int		check;
+    	int		value;
+    	char	*tmp;
+    
+    	check = 0;
+    	value = 0;
+    	tmp = str;
+    	len = check_exception(base);
+    	if (len == -1)
+    		return (0);
+    	while ((*tmp >= 9 && *tmp <= 13) || *tmp == 32)
+    		tmp++;
+    		tmp = check_number_and_minus(tmp, &check, &value, base);
+    	if (check == 1)
+    		value = value * -1;
+    	return (value);
+    }/
+    int		ft_atoi_base(char *str, char *base);
+    int		check_exception(char *base);
+    int		number_to_base(char *str, char	*base);
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base);
+    int		base_possible(char	*base, char ch);
+    
+    int	base_possible(char	*base, char ch)
+    {
+    	int	idx;
+    
+    	idx = 0;
+    	while (base[idx] != 0)
+    	{
+    		if (base[idx] == ch)
+    			return (idx);
+    		idx++;
+    	}
+    	return (-1);
+    }
+    
+    int	number_to_base(char	*str, char *base)
+    {
+    	int	base_value;
+    	int	idx;
+    	int	value;
+    
+    	base_value = 0;
+    	idx = 0;
+    	value = 0;
+    	while (base[base_value])
+    		base_value++;
+    	while (*str != 0)
+    	{
+    		idx = base_possible(base, *str);
+    		if (idx == -1)
+    			break ;
+    		value = value * base_value;
+    		value = value + idx;
+    		str++;
+    	}
+    	return (value);
+    }
+    
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base)
+    {
+    	int	cnt;
+    
+    	cnt = 0;
+    	while (*str == '-' || *str == '+')
+    	{
+    		if (*str == '-')
+    			cnt++;
+    		str++;
+    	}
+    	if (cnt % 2 == 0)
+    		*check = 0;
+    	else
+    		*check = 1;
+    	*value = number_to_base(str, base);
+    	return (str);
+    }
+    
+    int	check_exception(char *base)
+    {
+    	int	i;
+    	int	j;
+    	int	len;
+    
+    	len = 0;
+    	while (base[len] != 0)
+    		len++;
+    	if (len == 0 || len == 1)
+    		return (-1);
+    	i = -1;
+    	while (++i < len)
+    	{
+    		j = i;
+    		if (base[i] == '-' || base[i] == '+')
+    			return (-1);
+    		if ((base[i] >= 9 && base[i] <= 13) || base[i] == 32)
+    			return (-1);
+    		while (++j < len)
+    			if (base[i] == base[j])
+    				return (-1);
+    	}
+    	return (len);
+    }
+    
+    int	ft_atoi_base(char *str, char *base)
+    {
+    	int		len;
+    	int		check;
+    	int		value;
+    	char	*tmp;
+    
+    	check = 0;
+    	value = 0;
+    	tmp = str;
+    	len = check_exception(base);
+    	if (len == -1)
+    		return (0);
+    	while ((*tmp >= 9 && *tmp <= 13) || *tmp == 32)
+    		tmp++;
+    		tmp = check_number_and_minus(tmp, &check, &value, base);
+    	if (check == 1)
+    		value = value * -1;
+    	return (value);
+    }
+    ```
+    
+    ```c
+    // convert.base2.c
+    #include <stdlib.h>
+    
+    char	*ft_convert_base(char *nbr, char *base_from, char *base_to);
+    int		check_exception(char *base);
+    int		ft_atoi_base(char *str, char *base);
+    char	*convert_base(long long nb, char *base, int base_value);
+    int		check_len(long long nb, int base_value);
+    
+    int	check_len(long long nb, int base_value)
+    {
+    	int	len;
+    
+    	len = 0;
+    	if (nb < 0)
+    	{
+    		nb = nb * -1;
+    		len++;
+    	}
+    	while (nb != 0)
+    	{
+    		nb = nb / base_value;
+    		len++;
+    	}
+    	return (len);
+    }
+    
+    char	*convert_base(long long nb, char *base, int base_value)
+    {
+    	char		*str;
+    	int			len;
+    
+    	len = check_len(nb, base_value);
+    	str = (char *)malloc(sizeof(char) * 34);
+    	if (!(str))
+    		return (NULL);
+    	if (nb == 0)
+    	{
+    		str[0] = base[0];
+    		str[1] = '\0';
+    		return (str);
+    	}
+    	else if (nb < 0)
+    	{
+    		str[0] = '-';
+    		nb = nb * -1;
+    	}
+    	str[len] = '\0';
+    	while (nb != 0)
+    	{
+    		str[--len] = base[nb % base_value];
+    		nb = nb / base_value;
+    	}
+    	return (str);
+    }
+    
+    char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
+    {
+    	int		convert_value;
+    	int		from_len;
+    	int		to_len;
+    	char	*tmp;
+    
+    	from_len = check_exception(base_from);
+    	to_len = check_exception(base_to);
+    	if (from_len == -1 || to_len == -1)
+    		return (NULL);
+    	convert_value = ft_atoi_base(nbr, base_from);
+    	tmp = convert_base((long long)convert_value, base_to, to_len);
+    	return (tmp);
+    }
+    ```
+    
+    - 함수 실행 시 from_base 와 to_base의 예외를 체크한 후 이상이 있는경우 함수 종료
+    - 지난 과제에서 사용했던 atoi_base를 통해 입력받은 문자열을 10진수 정수로 반환
+    - 반환받은 10진수 정수를 ptr_base를 이용하여 해당 진법에 맞게 변환
+6. **Exercise 05**
+
+- **1차원 문자열을 매개변수로 받아 전달받은 구분자 매개변수로 구분하여 2차원 문자열 배열에 담아 반환**
+    - ****split(char *str, char *charset)**
+        - 동적할당을 받는 경우 배열의 크기는 항상 괄호로 묶는 습관을 들이자.
+    
+    ```c
+    #include <stdlib.h>
+    
+    char	**ft_split(char *str, char *charset);
+    char	*sep_str(char *str, char *charset, int *i);
+    int		arr_size(char	*str, char	*charset);
+    int		sep_check(char ch, char	*charset);
+    
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	char	*str ="QfB8RDlcsw3Tq 3r1DHjKVDbhHhsOQF2qE";
+    	char	*charset ="WHk0hrKf";
+    	char	**arr_str = ft_split(str, charset);
+    	int		size;
+    
+    	size = 0;
+    	while (sep_check(str[size], charset) == 1)
+    		size++;
+    	for(int i = 0; i<=5 ; i++)
+    		printf("[%d] : [%s]\n", i, arr_str[i]);
+    	return (0);
+    }
+    */
+    
+    int	sep_check(char ch, char	*charset)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (charset[i] != 0)
+    	{
+    		if (ch == charset[i])
+    			return (1);
+    		i++;
+    	}
+    	return (0);
+    }
+    
+    char	*sep_str(char	*str, char	*charset, int *i)
+    {
+    	int		idx;
+    	int		tmp;
+    	char	*str_tmp;
+    
+    	idx = -1;
+    	tmp = 0;
+    	while (str[tmp] != 0)
+    	{
+    		if (sep_check(str[tmp], charset) != 1)
+    			tmp++;
+    		else
+    			break ;
+    	}
+    	str_tmp = (char *)malloc(sizeof(char) * (tmp + 1));
+    	if (!(str_tmp))
+    		return (NULL);
+    	*i = *i + tmp;
+    	while (++idx < tmp)
+    		str_tmp[idx] = str[idx];
+    	str_tmp[tmp] = '\0';
+    	return (str_tmp);
+    }
+    
+    int	arr_size(char	*str, char	*charset)
+    {
+    	int	i;
+    	int	size;
+    
+    	i = 0;
+    	if (str[i] == 0)
+    		return (0);
+    	size = 1;
+    	while (str[i] != 0)
+    	{
+    		if (sep_check(str[i], charset) == 1)
+    		{
+    			size ++;
+    			while (sep_check(str[i], charset) == 1)
+    				i++;
+    		}
+    		else
+    			i++;
+    	}
+    	return (size);
+    }
+    
+    char	**ft_split(char *str, char *charset)
+    {
+    	char	**str_arr;
+    	int		i;
+    	int		idx;
+    	int		len;
+    
+    	i = 0;
+    	idx = 0;
+    	while (sep_check(str[i], charset) == 1)
+    		i++;
+    	len = arr_size(&str[i], charset);
+    	str_arr = (char **)malloc(sizeof(char *) * (len + 1));
+    	if (!(str_arr))
+    		return (NULL);
+    	while (idx < len)
+    	{
+    		str_arr[idx++] = sep_str((str + i), charset, &i);
+    		if (sep_check(str[i], charset) == 1)
+    		{
+    			while (sep_check(str[i], charset) == 1)
+    				i++;
+    		}
+    	}
+    	str_arr[idx] = NULL;
+    	return (str_arr);
+    }
+    ```
+    
+    - 2차원 배열로 반환해야 하므로 해당 1차원 문자열에 들어있는 구분자를 기준으로 사이즈 체크
+        - 구분자로 시작되는 경우가 있으므로 이와 같은 경우는 미리 밀어줘서 항상 구분자가 아닌 상태로 시작할 수 있도록 셋팅
+    - 구분자를 기준으로 해당 2차원 배열에 1차원 문자열을 할당해주고 다시 구분자가 아닌 문자열이 시작할 수 있도록 구분자를 밀어줌
+    
+    —# gcc -fsanitize=address -g3 옵션을 통해 segmentaion fault가 뜨는 부분을 정확하게 체크해야 통과할 수 있다.
 
 </div>
 </details>
