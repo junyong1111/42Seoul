@@ -1684,7 +1684,7 @@ patch a sw.diff -o b
     
     —# 주의해야할 점 : s1문자열뿐 아니라 s2문자열이 먼저 끝나는 상황도 조심해야 함
     
-1. **Exercise 01**
+2. **Exercise 01**
 
 - **string.h에 포함되어 있는 strnmp 함수 구현**
     - **strncmp :  (비교할 문자열1, 비교할 문자열 2, 크기)**
@@ -1740,7 +1740,7 @@ patch a sw.diff -o b
     
     —# 주의할 점 : 주어진 크기가 문자열보다 짧을 경우 이를 확인할 수 있어야 함
     
-1. **Exercise 02**
+3. **Exercise 02**
 
 - **string.h에 포함되어 있는 strcat 함수 구현**
     - **strcat :  (목적지 문자열 , 소스 문자열 )**
@@ -1787,7 +1787,7 @@ patch a sw.diff -o b
     - 문자열의 마지막은 NULL문자가 들어가야하므로 NULL삽입
     - 임시 변수를 다시 목적지의 첫 주소로 초기화 해주고 반환
     
-1. **Exercise 03**
+4. **Exercise 03**
 
 - **string.h에 포함되어 있는 strncat 함수 구현**
     - **strncat :  (목적지 문자열, 소스 문자열, 크기)**
@@ -1839,7 +1839,7 @@ patch a sw.diff -o b
         - **소~~스문자열의 부족**으로 **인한 중단** 시 **나머지 부분은 공백**으로 채워주어야 한다.~~
     - **마지막 문자 공백 추가**
     
-1. **Exercise 04**
+5. **Exercise 04**
 
 - **string에 있는 특정 문자열을 찾는 함수 구현**
     - **strstr :  (문자열, 문자패턴)**
@@ -1913,7 +1913,7 @@ patch a sw.diff -o b
             - 틀리다면 플래그 = 0, 중단
         - 모든 패턴을 탐색했을 때도 중단되지 않았다면 문자를 찾음
     
-1. **Exercise 05**
+6. **Exercise 05**
 
 - **string에 있는 원하는 길이만큼의 문자열을 더해주는 함수 구현**
     - **strlcat :  (목적지 문자열, 소스문자열,  크기 )**
@@ -2017,7 +2017,7 @@ patch a sw.diff -o b
     - 문자열 한개를 입력받아 그 문자의 끝까지 갈때까지 반복문을 진행
     - 한 번 진행 시 길이를 1개씩 증가
     
-1. **Exercise 01**
+2. **Exercise 01**
 
 - 표준 출력에서 문자열을 출력하는 함수 작성
     
@@ -2040,7 +2040,7 @@ patch a sw.diff -o b
     - 위와 같이 문자열의 길이를 계산 후
     - write()함수를 이용하여 길이만큼 문자열을 출력
     
-1. **Exercise 02**
+3. **Exercise 02**
 
 - 인자로 받은 정수값을 문자열로 변환하는 함수 작성
     - int 자료형 표현 범위 전부를 표현할 수 있어야 함
@@ -2136,135 +2136,353 @@ void	ft_putnbr(int nb)
     - 나머지 연산을 통해 배열의 뒷부분부터 하나씩 배열에 삽입
     - 이후 출력
 
-1. **Exercise 03**
+4. **Exercise 03**
 
-- **string.h에 포함되어 있는 strncat 함수 구현**
-    - **strncat :  (목적지 문자열, 소스 문자열, 크기)**
-        - 소스문자열을 목적지 문자열에 **주어진 크기**만큼 복사하는 함수
+- **string.h에 포함되어 있는 atoi 함수 구현**
+    - **atoi :  (변환할 문자열)**
+        - 문자열을 매개변수로 받아 int형 정수로 반환해주는 함수
+            - 오버플로우는 신경쓰지 않아도 된다.
     
     ```c
     
-    char	*ft_strncat(char *dest, char *src, unsigned int nb);
-    /*
-    int main()
+    int		ft_atoi(char *str);
+    int		check_white_space(char ch);
+    char	*check_minus(char *str, int *check);
+    void	check_number(char *str, int *value);
+    
+    void	check_number(char *str, int *value)
     {
-    	char dest1[20] = "Hello";
-    	char src1[20] = " World";
-    
-    	char dest2[20] = "Hello";
-    	char src2[20] = " World";
-    	
-    	int n = 15;
-    
-    	printf("My Func is %s\n", ft_strncat(dest1, src1, n));
-    	printf("C  Func is %s\n", strncat(dest2, src2, n));
-    
-    	return 0;
+    	while (*str >= 48 && *str <= 57)
+    	{
+    		*value = *(value) * 10;
+    		*value = *(value) + *str -48;
+    		str++;
+    	}
     }
-    */
     
-    char	*ft_strncat(char *dest, char *src, unsigned int nb)
+    char	*check_minus(char *str, int *check)
     {
-    	char				*temp;
-    	unsigned int		i;
+    	int	cnt;
     
-    	i = 0;
-    	temp = dest;
-    	if (nb == 0)
-    		return (dest);
+    	cnt = 0;
+    	while (*str == '-' || *str == '+')
+    	{
+    		if (*str == '-')
+    			cnt++;
+    		str++;
+    	}
+    	if (cnt % 2 == 0)
+    		*check = 0;
+    	else
+    		*check = 1;
+    	return (str);
+    }
+    
+    int	check_white_space(char ch)
+    {
+    	if ((ch >= 9 && ch <= 13) || ch == 32)
+    		return (1);
+    	return (0);
+    }
+    
+    int	ft_atoi(char *str)
+    {
+    	int		check;
+    	int		value;
+    	char	*temp;
+    
+    	check = 0;
+    	value = 0;
+    	temp = str;
     	while (*temp != 0)
-    		temp++;
-    	while (i < nb && *(src + i))
-    		*temp++ = *(src + i++);
-    	*temp = '\0';
-    	temp = dest;
-    	return (temp);
+    	{
+    		if (check_white_space(*temp) == 1)
+    		{
+    			temp++;
+    			continue ;
+    		}
+    		if (*temp == '-' || *temp == '+' || (*temp >= '0' && *temp <= '9'))
+    		temp = check_minus(temp, &check);
+    		check_number(temp, &value);
+    		break ;
+    	}
+    	if (check == 1)
+    		return (value * -1);
+    	return (value);
     }
     ```
     
-    - 복사할 크기가 0이라면 예외처리 ( 마지막 while문으로 인해 굳이 할 필요는 없지만 불필요한 연산을 막기위해)
-    - 임시 변수에 목적지 문자열에 주소를 담고 NULL까지 포인터 전진
-    - 주어진 크기만큼 갔거나 더이상 복사할 소스문자열이 없는 경우 멈춤
-        - **소~~스문자열의 부족**으로 **인한 중단** 시 **나머지 부분은 공백**으로 채워주어야 한다.~~
-    - **마지막 문자 공백 추가**
+    - 매개변수로 전달된 문자열의 공백(화이트 스페이스)들을 모두 제거
+    - 이후 마이너스 개수에 따라 부호 결정
+    - 숫자문자가 들어온 경우 그 아스키코드에 48을 빼줌으로 정수값 연산
     
-1. **Exercise 04**
+    —# string.h에 포함된 atoi같은 경우 -연산이 중복된 경우 0처리를 해주지만 해당 과제에서는 -갯수에 따라 부호를 결정한다.
+    
+5. **Exercise 04**
 
-- **string에 있는 특정 문자열을 찾는 함수 구현**
-    - **strstr :  (문자열, 문자패턴)**
-        - **주어진 문자열에서 특정 문자패턴을 찾아서 문자열의 첫번째 인덱스를 반환**
+- **정수와 base를 매개변수로 받아 해당 정수를 전달받은 base로 진법을 변환하는 함수 작성**
+    - **putnbr_base :  (정수, base)**
     
     ```c
-    char	*ft_strstr(char *str, char *to_find);
-    int		find_string(char *str, char *to_find, int i, int j);
+    #include <unistd.h>
+    
+    void	ft_putnbr_base(int nbr, char *base);
+    int		check_exception(char *base, int len);
+    int		check_minus(long long nb, char *base);
+    int		check_base(char *base);
+    void	print_base(long long nb, char *base);
     /*
+    #include <stdio.h>
+    
     int main()
     {
-    
-    	char	*string1 = "needle in a haystack";
-    	char	*string2 = "haystack";
-    	printf("My Func Answer is : %s\n", ft_strstr(string1, string2));
-    	char	*string_1 = "needle in a haystack";
-    	char	*string_2 = "haystack";
-    	printf("C  Func Answer is : %s\n", strstr(string_1, string_2));
+    	ft_putnbr_base(-2147483648, "0123456789");
+    	printf("\n");
+    	ft_putnbr_base(-2147483648, "0123456789abcdef");
+    	printf("\n");
+    	ft_putnbr_base(-2147483648, "jungyeki");
+    	printf("\n");
+    	ft_putnbr_base(-2147483648, "poneyvif");
+    	printf("\n");
     	return 0;
     }
     */
     
-    int	find_string(char *str, char *to_find, int i, int j)
+    int	check_base(char *base)
     {
-    	int	check;
+    	int	idx;
     
-    	check = 1;
-    	while (to_find[j] != 0)
-    	{
-    		if (*(str + i + j) == to_find[j])
-    		{
-    			j++;
-    			check = 1;
-    		}
-    		else
-    		{
-    			check = 0;
-    			break ;
-    		}
-    	}
-    	return (check);
+    	idx = 0;
+    	while (base[idx])
+    		idx++;
+    	return (idx);
     }
     
-    char	*ft_strstr(char *str, char *to_find)
+    int	check_minus(long long nb, char *base)
+    {
+    	if (nb == 0)
+    	{
+    		write(1, &base[nb], 1);
+    		return (2);
+    	}
+    	if (nb < 0)
+    		return (1);
+    	return (0);
+    }
+    
+    void	print_base(long long nb, char *base)
+    {
+    	char		str[34];
+    	int			idx;
+    	int			len;
+    	long long	tmp;
+    	int			base_value;
+    
+    	len = 0;
+    	base_value = check_base(base);
+    	if (check_minus(nb, base) == 2)
+    		return ;
+    	if (check_minus(nb, base) == 1)
+    		nb = nb * -1;
+    	tmp = nb;
+    	while (tmp != 0)
+    	{
+    		tmp = tmp / base_value;
+    		len++;
+    	}
+    	idx = 1;
+    	while (nb != 0)
+    	{
+    		str[len - idx++] = base[nb % base_value];
+    		nb = nb / base_value;
+    	}
+    	write(1, str, len);
+    }
+    
+    int	check_exception(char *base, int len)
     {
     	int	i;
-    	int	check;
+    	int	j;
     
-    	if (*to_find == 0)
-    		return (str);
+    	if (len == 0 || len == 1)
+    		return (1);
     	i = 0;
-    	while (*(str + i) != 0)
+    	while (i < len)
     	{
-    		check = 0;
-    		if (*(str + i) == to_find[0])
-    			check = find_string(str, to_find, i, 1);
-    		if (check == 1)
-    			return (str + i);
+    		j = i + 1;
+    		if (base[i] == '-' || base[i] == '+')
+    			return (1);
+    		while (j < len)
+    		{
+    			if (base[i] == base[j])
+    				return (1);
+    			j++;
+    		}
     		i++;
     	}
     	return (0);
     }
+    
+    void	ft_putnbr_base(int nbr, char *base)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (base[len])
+    		len++;
+    	if (check_exception(base, len) == 1)
+    		return ;
+    	if (nbr < 0)
+    		write(1, "-", 1);
+    	print_base((long long)nbr, base);
+    }
     ```
     
-    - 주어진 문자패턴이 NULL인 경우 본래 문자를 반환
-    - 문자열을 하나씩 탐색시작
-        - 탐색한 문자열이 문자패턴의 첫글자와 일치한다면 find_string함수 실행
-    - find_string(문자열, 문자패턴, 탐색한 문자열의 패턴 시작, 0);
-        - 문자패턴이 0부터 시작이고 이미 일치했다는 사실을 알고있으므로 1증가한 상태에서부터 문자패턴 탐색 시작
-            - i : 현재 문자열 과 다음 문자열의 패턴이 동일하다면 flag =1, 전진
-            - 틀리다면 플래그 = 0, 중단
-        - 모든 패턴을 탐색했을 때도 중단되지 않았다면 문자를 찾음
+    - 전달받은 base의 길이가 곧 몇 진법인지 알 수 있으므로 길이 확인
+    - 진법 예외처리
+        - base의 길이가 없거나 1인경우 예외
+        - base 문자열의 ‘-’ 또는 ‘+’ 부호가 포함된 경우
+        - base 문자열중 중복된 문자가 포함된 경우
+    - 해당 정수가 음수라면 미리 ‘-’를 출력
+    - 이 때 int 자료형의 최솟값 처리를 위해 전달받은 int → Long long으로 형변환
+    - 가장 작은 진법 (2진법)으로 int 자료형을 모두 포함하려면 총 32비트가 필요하고 문자열이므로 NULL문자를 포함하기 때문에 총 33 이상의 배열 선언
+    - 해당 정수를 주어진 base로 나눠준 후 문자열의 맨 뒤부터 나머지 연산으로 값을 채움
     
-1. **Exercise 05**
+6. **Exercise 05**
 
-- **string에 있는 원하는 길이만큼의 문자열을 더해주는 함수 구현**
+- **위에서 작성한 atoi와 put_nbr_base를 결합**
+    - atoi_base(문자열, base)
+        - 전달받은 문자열을 전달받은 base로 진법 변환
+    
+    ```c
+    
+    int		ft_atoi_base(char *str, char *base);
+    int		check_exception(char *base, int len);
+    int		number_to_base(char *str, char	*base);
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base);
+    int		base_possible(char	*base, char ch);
+    /*
+    #include <stdio.h>
+    
+    int main()
+    {
+    	char	*str = "           24   ----++---+jungyeye0224";
+    	char	*base = "0123456789abcdef";
+    	printf("ft_atoi_base func answer is [%d]\n", ft_atoi_base(str, base));
+    	return 0;
+    }
+    */
+    
+    int	base_possible(char	*base, char ch)
+    {
+    	int	idx;
+    
+    	idx = 0;
+    	while (base[idx] != 0)
+    	{
+    		if (base[idx] == ch)
+    			return (idx);
+    		idx++;
+    	}
+    	return (-1);
+    }
+    
+    int	number_to_base(char	*str, char *base)
+    {
+    	int	base_value;
+    	int	idx;
+    	int	value;
+    
+    	base_value = 0;
+    	idx = 0;
+    	value = 0;
+    	while (base[base_value])
+    		base_value++;
+    	while (*str != 0)
+    	{
+    		idx = base_possible(base, *str);
+    		if (idx == -1)
+    			break ;
+    		value = value * base_value;
+    		value = value + idx;
+    		str++;
+    	}
+    	return (value);
+    }
+    
+    char	*check_number_and_minus(char *str, int *check, int *value, char	*base)
+    {
+    	int	cnt;
+    
+    	cnt = 0;
+    	while (*str == '-' || *str == '+')
+    	{
+    		if (*str == '-')
+    			cnt++;
+    		str++;
+    	}
+    	if (cnt % 2 == 0)
+    		*check = 0;
+    	else
+    		*check = 1;
+    	*value = number_to_base(str, base);
+    	return (str);
+    }
+    
+    int	check_exception(char *base, int len)
+    {
+    	int	i;
+    	int	j;
+    
+    	if (len == 0 || len == 1)
+    		return (1);
+    	i = 0;
+    	while (i < len)
+    	{
+    		j = i + 1;
+    		if (base[i] == '-' || base[i] == '+')
+    			return (1);
+    		if ((base[i] >= 9 && base[i] <= 13) || base[i] == 32)
+    			return (1);
+    		while (j < len)
+    		{
+    			if (base[i] == base[j])
+    				return (1);
+    			j++;
+    		}
+    		i++;
+    	}
+    	return (0);
+    }
+    
+    int	ft_atoi_base(char *str, char *base)
+    {
+    	int		len;
+    	int		check;
+    	int		value;
+    	char	*tmp;
+    
+    	len = 0;
+    	check = 0;
+    	value = 0;
+    	tmp = str;
+    	while (base[len])
+    		len++;
+    	if (check_exception(base, len) == 1)
+    		return (0);
+    	while ((*tmp >= 9 && *tmp <= 13) || *tmp == 32)
+    		tmp++;
+    		tmp = check_number_and_minus(tmp, &check, &value, base);
+    	if (check == 1)
+    		value = value * -1;
+    	return (value);
+    }
+    ```
+    
+    - 위와 같은 조건에서 화이트 스페이스가 포함된 경우를 추가해서 진법 체크
+    - 이후 전달받은 문자열에 공백을 모두 밀어줌
+    - ‘-’부호의 개수에 따라 부호를 결정
+    - 모든 문자열의 끝부터 나머지 연산을 통해 int정수값을 구해준 후 반환
     - **strlcat :  (목적지 문자열, 소스문자열,  크기 )**
         - 목적지 문자열에 소스문자열을 주어진 크기만큼 더해주는 함수이며 반환값은 int
         - **여기서 크기는 반드시 목적지 문자열 + 소스 문자열 + NULL문자가 포함되는 길이  이상이어야한다.**
@@ -2342,6 +2560,390 @@ void	ft_putnbr(int nb)
 <details>
 <summary> C 05  </summary>
 <div markdown="1">
+
+1. **Exercise 00**
+
+- **반복문을 사용하여 팩토리얼을 구하는 함수 작성**
+    - iterative_factorial(정수)
+    
+    ```c
+    int	ft_iterative_factorial(int nb);
+    /*
+    #include <stdio.h>
+    
+    int main()
+    {
+    	int nb = 6;
+    	printf("%d\n", ft_iterative_factorial(nb));
+    
+    }
+    */
+    
+    int	ft_iterative_factorial(int nb)
+    {
+    	int	ret;
+    
+    	ret = 1;
+    	if (nb < 0)
+    		return (0);
+    	while (nb != 0)
+    	{
+    		ret = ret * nb;
+    		nb--;
+    	}
+    	return (ret);
+    }
+    ```
+    
+    - 팩토리얼의 경우 주어진 자연수의 값을 하나씩 빼면서 곱함
+    
+    —# 0!은 0이 아닌 1이므로 이를 주의해야함
+    
+2. **Exercise 01**
+
+- **위에서 구현한 팩토리얼 함수를 재귀로 작성**
+    - recursive_factorial(정수
+    
+    ```c
+    int	ft_recursive_factorial(int nb);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	printf("====Answer is [%d] ==============\n", ft_recursive_factorial(0));
+    	return 0;
+    }
+    */
+    
+    int	ft_recursive_factorial(int nb)
+    {
+    	if (nb < 0)
+    		return (0);
+    	if (nb == 0 || nb == 1)
+    		return (1);
+    	return (nb * ft_recursive_factorial(nb -1));
+    }
+    ```
+    
+    - 반복문으로 구현했던것을 재귀로 구현
+    
+    —# 모든 반복문은 재귀로 구현이 가능하고 반대도 마찬가지로 가능하다.
+    
+3. **Exercise 02**
+
+- **반복문을 사용하여 매겨변수로 주어진 정수의 제곱값을 구하는 함수 작성**
+    - iterative_power(정수 N, 정수 제곱)
+    
+    ```c
+    int	ft_iterative_power(int nb, int power);
+    
+    int	ft_iterative_power(int nb, int power)
+    {
+    	int	ret;
+    
+    	ret = 1;
+    	if (power < 0)
+    		return (0);
+    	if (power == 0)
+    		return (1);
+    	while (power != 0)
+    	{
+    		ret = ret * nb;
+    		power--;
+    	}
+    	return (ret);
+    }
+    ```
+    
+    - 주어진 제곱이 0이 될 때까지 반복문을 놀면서 주어진 n값을 곱해줌
+    
+    —# 어떤수의 N^0은 0이 아닌 1이다
+    
+4. **Exercise 03**
+
+- **재귀를 사용하여 매겨변수로 주어진 정수의 제곱값을 구하는 함수 작성**
+    - **recursive_power(int nb, int power)**
+        - 위에서 구현한 함수를 재귀로 작성
+    
+    ```c
+    int	ft_recursive_power(int nb, int power);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	printf("============= Answer is [%d] =============\n", ft_recursive_power(2,4));
+    	return 0;
+    }
+    */
+    
+    int	ft_recursive_power(int nb, int power)
+    {
+    	if (power < 0)
+    		return (0);
+    	if (power == 0)
+    		return (1);
+    	return (nb * ft_recursive_power(nb, power -1));
+    }
+    ```
+    
+    - 음수 예외처리만 해주면 간단하게 구현가능
+    
+5. **Exercise 04**
+
+- **재귀를 사용하여 주어진 매개변수의 피보나치 수열을 구해주는 함수 작성**
+    - fibonacci(int index)
+    
+    ```c
+    int	ft_fibonacci(int index);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	printf("============= Answer is [%d] ==========\n", ft_fibonacci(10));
+    	return 0;
+    }
+    */
+    
+    int	ft_fibonacci(int index)
+    {
+    	if (index < 0)
+    		return (-1);
+    	if (index == 0 || index == 1)
+    		return (index);
+    	return (ft_fibonacci(index -1) + ft_fibonacci(index -2));
+    }
+    ```
+    
+    - 피보나치는 자기자신 -1 자기자신 -2 의 값을 가지는 수열패턴이므로 그에 맞게 처리
+    
+6. **Exercise 05**
+
+- **전달받은 매개변수의 제곱근의 여부를 구하는 함수 작성**
+    - **ft_sqrt(int nb)**
+    
+    ```c
+    int	ft_sqrt(int nb);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	printf("============= Answer is [%d] ==============\n", ft_sqrt(11));
+    	return 0;
+    }
+    */
+    
+    int	ft_sqrt(int nb)
+    {
+    	long long	i;
+    
+    	i = 1;
+    	while (i * i <= nb)
+    	{
+    		if (i * i == nb)
+    			return ((int)i);
+    		i++;
+    	}
+    	return (0);
+    }
+    ```
+    
+    - 제곱근이 존재하는지 확인하려면 해당값이 어떤수의 제곱인지 확인해야함
+    - 어떤수의 제곱을 구할 때 해당값이 int자료형을 넘어갈 수 있으므로 long long 으로 자료형을 지정해줘야 함
+
+7. **Exercise 06**
+
+- **전달받은 매개변수가 소수인지 판별하는 함수 작성**
+    - **ft_is_prime(int nb)**
+    
+    ```c
+    int	ft_is_prime(int nb);
+    /*
+    #include <stdio.h>
+    int main()
+    {
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(-1));
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(0));
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(1));
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(2));
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(25));
+    	printf("============= Answer is [%d] ===============\n", ft_is_prime(19));
+    	return 0;
+    }
+    */
+    
+    int	ft_is_prime(int nb)
+    {
+    	long long	i;
+    
+    	if (nb <= 1)
+    		return (0);
+    	i = 2;
+    	while (i * i <= nb)
+    	{
+    		if (nb % i == 0)
+    			return (0);
+    		i++;
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 해당값이 소수라면 1과 자기자신을 제외한 어떤 수로도 나눠지면 안된다.
+    - 여기서 제곱근 나누기를 사용하여 반복횟수를 줄여줌
+    
+    —# 제곱근 나누기
+    
+    어떤 수가 합성수(소수가 아님)인 경우 그 수는 해당 정수의 루트값의 대칭이므로 그 값을 끝까지 확인하지 않고 루트값까지만 확인하여도 소수를 판별할 수 있음
+    
+8. **Exercise 07**
+
+- **전달받은 매개변수의 다음 소수가 무엇인지 판별하는 함수 작성**
+    - **ft_find_next_prime(int nb)**
+    
+    ```c
+    int	ft_is_prime(int nb);
+    int	ft_find_next_prime(int nb);
+    
+    int	ft_find_next_prime(int nb)
+    {
+    	if (nb <= 1)
+    		return (2);
+    	while (ft_is_prime(nb) != 1)
+    		nb++;
+    	return (nb);
+    }
+    
+    int	ft_is_prime(int nb)
+    {
+    	long long	i;
+    
+    	if (nb <= 1)
+    		return (0);
+    	i = 2;
+    	while (i * i <= nb)
+    	{
+    		if (nb % i == 0)
+    			return (0);
+    		i++;
+    	}
+    	return (1);
+    }
+    ```
+    
+    - 위에서 사용한 소수 구하는 함수를 그대로 사용
+    - 반복문을 돌면서 다음소수를 찾을 때까지 해당값을 증가
+    
+9. **Exercise 08**
+
+- **10x10 퀸 퍼즐을 백트래킹을 사용하여 가능한 모든 경우의 수를 출력**
+    - **ten_queens_puzzle(void)**
+    - 퀸 퍼즐같은 경우 해당 index자리에 퀸이 놓아질 수 있는지에 대한 가능성을 체크하므로 1차원 배열을 사용하면 더 간단하게 해결이 가능
+    
+    ```c
+    #include <unistd.h>
+    
+    int		ft_ten_queens_puzzle(void);
+    int		is_possible(int *board, int idx);
+    void	ten_queen(int *board, int idx, int *total);
+    void	print_queen(int *board, int *total);
+    int		ft_abs(int n);
+    /*
+    #include <stdio.h>
+    
+    int main()
+    {
+    	printf(" Total count is : [%d]\n",	ft_ten_queens_puzzle());
+    	return (0);
+    }
+    */
+    
+    int	ft_abs(int n)
+    {
+    	if (n < 0)
+    		n = n * -1;
+    	return (n);
+    }
+    
+    void	print_queen(int *board, int *total)
+    {
+    	int		i;
+    	char	ch;
+    
+    	i = 0;
+    	while (i < 10)
+    	{
+    		ch = '0' + board[i];
+    		write(1, &ch, 1);
+    		i++;
+    	}
+    	write(1, "\n", 1);
+    	*total = *total +1;
+    }
+    
+    int	is_possible(int *b, int idx)
+    {
+    	int	k;
+    	int	promising;
+    
+    	k = 0;
+    	promising = 1;
+    	while (k < idx && promising)
+    	{
+    		if (b[idx] == b[k] || (ft_abs(b[idx] - b[k]) == idx - k))
+    			promising = 0;
+    		k ++;
+    	}
+    	return (promising);
+    }
+    
+    void	ten_queen(int *board, int idx, int *total)
+    {
+    	int	i;
+    
+    	i = 0;
+    	if (is_possible(board, idx))
+    	{
+    		if (idx == 9)
+    			print_queen(board, total);
+    		else if (idx < 9)
+    		{
+    			while (i < 10)
+    			{
+    				board[idx +1] = i;
+    				ten_queen(board, idx +1, total);
+    				i++;
+    			}
+    		}
+    	}
+    }
+    
+    int	ft_ten_queens_puzzle(void)
+    {
+    	int	board[10];
+    	int	i;
+    	int	total;
+    
+    	total = 0;
+    	i = 0;
+    	while (i < 10)
+    		board[i++] = 0;
+    	i = 0;
+    	while (i < 10)
+    	{
+    		board[0] = i;
+    		ten_queen(board, 0, &total);
+    		i++;
+    	}
+    	return (total);
+    }
+    ```
+    
+    - 10x10 퍼즐이므로 1차원 크기가 10인 배열생성
+    - 해당 보드값을 백트랙킹을 사용하여 재귀적으로 탐색
+    - 가능성 체크
+        - 해당 배열의 인덱스만큼 크기를 증가시키면서 만약 해당 인덱스에 이미 같은 값이 들어있다면 해당 행이 겹친다는 의미
+        - X자 체크 절댓값을 사용하면 X자로 체크 가능
+    - 해당 인덱스가 보드에 들어갈 수 있다면 다음으로 진행하며 만약 불가능한 경우 다시 돌아와서 탐색 시작(백트랙킹)
 
 </div>
 </details>
