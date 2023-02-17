@@ -3828,6 +3828,262 @@ void	ft_putnbr(int nb)
 <summary> C  08  </summary>
 <div markdown="1">
 
+1. **Exercise 00**
+
+- **정의되어 있지않은 Header를 정의하는 코드 작성**
+    
+    ```c
+    #ifndef FT_H
+    # define FT_H
+    
+    void	ft_putchar(char c);
+    void	ft_swap(int *a, int *b);
+    void	ft_putstr(char *str);
+    int		ft_strlen(char *str);
+    int		ft_strcmp(char *s1, char *s2);
+    
+    #endif
+    ```
+    
+    - Ifndef를 이용하여 해당 전처리가 정의되어 있지않다면 정의 후 endif로 마무리
+    
+2. **Exercise 01**
+
+- **Boolean 헤더를 만드는 코드 작성**
+    - 해당 헤더파일을 include함으로 Main함수가 동작해야 하므로 다음과 같이 전처리
+    
+    ```c
+    #ifndef FT_BOOLEAN_H
+    # define FT_BOOLEAN_H
+    
+    # include <unistd.h>
+    
+    # define TRUE 1
+    # define FALSE 0
+    # define EVEN(value) (value % 2 == 0)
+    # define EVEN_MSG "I have an even number of arguments.\n"
+    # define ODD_MSG "I have an odd number of arguments.\n"
+    # define SUCCESS 0
+    
+    typedef int	t_bool;
+    #endif
+    ```
+    
+    - 헤더파일 뿐만아니라 짝수인지 확인하는 전처리 작성
+    
+3. **Exercise 02**
+
+- **절댓값 메크로 정의**
+    
+    ```c
+    #ifndef FT_ABS_H
+    # define FT_ABS_H
+    # define ABS(Value) (((Value >= 0) - (Value < 0)) *Value)
+    #endif
+    ```
+    
+    - ifndef를 이용하여 절댓값 함수 매크로 설정
+    
+    —# 삼항연산자를 사용하지 않아야 하므로 다음과 같이 작성
+    
+4. **Exercise 03**
+
+- **x,y 좌표를 표현할 수 있는 좌표 구조체 정의**
+    
+    ```c
+    #ifndef FT_POINT_H
+    # define FT_POINT_H
+    
+    typedef struct s_point
+    {
+    	int	x;
+    	int	y;
+    }	t_point;
+    #endif
+    ```
+    
+    - 좌표를 표현해야 하므로 x,y 두 개의 정수를 가지고 있는 구조체 선언
+    
+    —# 구조체 이름 규칙과 typedef 이름 규칙을 주의
+    
+5. **Exercise 04**
+
+- **argvc와 argv를 인자로 받아 해당 값을 정수 1개, 문자열 2개를 갖는 구조체가 있다고 가정하고 그 값을 초기화하는 함수 작성**
+    
+    ```c
+    #include <stdlib.h>
+    #include "ft_stock_str.h"
+    
+    char				*ft_strdup(char *src);
+    int					ft_str_len(char *str);
+    struct	s_stock_str	*ft_strs_to_tab(int ac, char **av);
+    
+    /*
+    typedef struct s_stock_str
+    {
+    int		size;
+    char	*str;
+    char	*copy;
+    } t_stock_str;
+    */
+    int	ft_str_len(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len++;
+    	return (len);
+    }
+    
+    char	*ft_strdup(char *src)
+    {
+    	char	*tmp;
+    	int		len;
+    	int		i;
+    
+    	len = ft_str_len(src);
+    	tmp = (char *)malloc(sizeof(char) * (len + 1));
+    	if (!(tmp))
+    		return (NULL);
+    	i = 0;
+    	while (i < len)
+    	{
+    		tmp[i] = src[i];
+    		i++;
+    	}
+    	tmp[i] = '\0';
+    	return (tmp);
+    }
+    
+    struct	s_stock_str	*ft_strs_to_tab(int ac, char **av)
+    {
+    	int					i;
+    	struct s_stock_str	*t_s;
+    
+    	i = 0;
+    	t_s = (struct s_stock_str *)malloc(sizeof(struct s_stock_str) * (ac + 1));
+    	if (!(t_s))
+    		return (NULL);
+    	while (i < ac)
+    	{
+    		t_s[i].size = ft_str_len(av[i]);
+    		t_s[i].str = av[i];
+    		t_s[i].copy = ft_strdup(av[i]);
+    		i++;
+    	}
+    	t_s[i].str = 0;
+    	t_s[i].copy = 0;
+    	return (t_s);
+    }
+    ```
+    
+    - 들어온 인자 만큼 구조체 배열을 선언해준 후
+    - 반복문을 돌면서 해당 구조체의 멤버변수 값을 초기화
+    - 마지막 구조체 문자열 멤버 변수의 값은 NULL을 넣어준다.
+    
+6. **Exercise 05**
+
+- **위에서 작성한 구조체 멤버변수 값들을 확인하는 함수 작성**
+    
+    ```c
+    #include <unistd.h>
+    #include "ft_stock_str.h"
+    
+    void	ft_show_tab(struct s_stock_str *par);
+    
+    void	integer_to_string(int nb, int len)
+    {
+    	char	str[11];
+    	int		temp;
+    
+    	temp = len;
+    	while (nb != 0)
+    	{
+    		str[len - 1] = '0' + (nb % 10);
+    		nb = nb / 10;
+    		len--;
+    	}
+    	write(1, str, temp);
+    }
+    
+    void	ft_putstr(char *str)
+    {
+    	int	len;
+    
+    	len = 0;
+    	while (str[len] != 0)
+    		len ++;
+    	write(1, str, len);
+    }
+    
+    int	minus_number_len(int nb, int *check)
+    {
+    	int	len;
+    	int	temp;
+    
+    	len = 0;
+    	if (nb < 0)
+    	{
+    		*check = 1;
+    		nb = nb * -1;
+    	}
+    	temp = nb;
+    	while (temp != 0)
+    	{
+    		len ++;
+    		temp = temp / 10;
+    	}
+    	return (len);
+    }
+    
+    void	ft_putnbr(int nb)
+    {
+    	int		len;
+    	int		check;
+    
+    	check = 0;
+    	len = minus_number_len(nb, &check);
+    	if (nb == -2147483648)
+    	{
+    		write(1, "-", 1);
+    		write(1, "2147483648", 10);
+    		return ;
+    	}
+    	if (nb == 0)
+    	{
+    		write(1, "0", 1);
+    		return ;
+    	}
+    	if (check == 1)
+    	{
+    		nb = nb * -1;
+    		write(1, "-", 1);
+    	}
+    	integer_to_string(nb, len);
+    }
+    
+    void	ft_show_tab(struct s_stock_str *par)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (par[i].str != 0)
+    	{
+    		ft_putstr(par[i].str);
+    		write(1, "\n", 1);
+    		ft_putnbr(par[i].size);
+    		write(1, "\n", 1);
+    		ft_putstr(par[i].copy);
+    		write(1, "\n", 1);
+    		i++;
+    	}
+    }
+    ```
+    
+    - 기존 과제에서 사용했던 문자열을 출력해주는 함수 putstr을 사용하여 구조체에 있는 문자열 멤버 변수들을 출력
+    - 기존 과제에서 사용했던 정수를 문자열로 출력해주는 putnbr함수를 사용하여 구조체에 있는 정수형 멤버 변수를 출력
+
 </div>
 </details>
 
