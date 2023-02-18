@@ -4095,6 +4095,15 @@ void	ft_putnbr(int nb)
 </div>
 </details>
 
+### C Piscine Rush 02
+<details>
+<summary> Rush 02  </summary>
+<div markdown="1">
+
+</div>
+</details>
+
+
 <!--
 <details>
 <summary> C  09  </summary>
