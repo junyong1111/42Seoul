@@ -4087,6 +4087,8 @@ void	ft_putnbr(int nb)
 </div>
 </details>
 
+## 3. Rush
+
 ### C Piscine Rush 01
 <details>
 <summary> Rush 01  </summary>
