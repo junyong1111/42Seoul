@@ -4094,6 +4094,8 @@ void	ft_putnbr(int nb)
 <summary> Rush 01  </summary>
 <div markdown="1">
 
+
+
 </div>
 </details>
 
