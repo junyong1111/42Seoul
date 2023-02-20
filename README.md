@@ -4087,6 +4087,176 @@ void	ft_putnbr(int nb)
 </div>
 </details>
 
+### C Piscine C 09
+
+<details>
+<summary> C  09  </summary>
+<div markdown="1">
+
+## **Make 파일**
+
+- 파일이 여러개일 때 일일이 컴파일 하기 불편하고 컴파일 하지 않아야 할 파일을 컴파일 하는 등 실수가 생길 수 있다 이를 방지하기 위하여 사용
+
+내부  구조
+
+- **target, dependency, comman의 세 개로 이루어진 기본적인 규칙들이 계속적으로 나열되어 있다**
+    
+    ex) target … : dependency …
+    
+                        command
+    
+    - target : commnad(명령)이 수행이 되어서 나온 결과 파일을 지정한다. 당연히 목적 파일 이나 실행 파일이다.
+    - command 부분에 정의된 명령들은 **dependency부분에 정의된 파일의 내용이 바뀌었거나, 목표 부분에 해당하는 파일이 없을 때 이곳에 정의된 것들이 차례대로 실행이 된다. 일반적으로 쉘에서 쓸 수 있는 모든 명령어들을 사용할 수 있다.**
+    
+    —# target 부분에는 결과 파일만 올 수 있는 것이 아니고, 보통 make clean에서와 같이 간단한 레이블 기능을 제공하기도 한다.
+    
+    —# comman 부분은 꼭 tab글자로 시작해야 한다. 빈칸 등을 사용하면 에러가 난다. 명령어인지 아닌지를 tab으로 구분하기 때문
+    
+    make 없이 컴파일 했을 경우
+    
+    ```bash
+    gcc -c main.c
+    gcc -c read.c
+    gcc -c write.c
+    
+    gcc -o test main.o read.o write.o
+    ```
+    
+    - 파일 수가 작아서 간단해 보이지만 파일이 많다면 쉽지 않다.
+    
+    make 파일로 컴파일 했을 경우
+    
+    ```bash
+    test : main.o read.o write.o
+    								gcc -o test main.o read.o write.o
+    main.o : io.h main.c
+    								gcc -c main.c
+    read.o : io.h read.c
+    								gcc -c read.d
+    write.o : io.h write.c
+    								gcc -c write.c
+    ```
+    
+    ![Screen Shot 2023-02-02 at 9.41.34 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d782f4e4-3a20-4064-a4fa-862f5462b88a/Screen_Shot_2023-02-02_at_9.41.34_AM.png)
+    
+    Test가 만들어 지기 위해서는 main.o, read.o, write.o가 필요하고 각각의 목적 파일들은 모두 자신의 소스파일과 헤더파일에 의존함을 알 수 있다.
+    
+    ### **매크로 사용**
+    
+    간단한 매크로 기능을 사용하여 make파일 구성
+    
+    ```bash
+    OBJECTS = main.o read.o write.o
+    
+    test : $(OBJECTS)
+    								gcc -o test $(OBJECTS)
+    main.o : io.h main.c
+    								gcc -c main.c
+    read.o : io.h read.c
+    								gcc -c read.d
+    write.o : io.h write.c
+    								gcc -c write.c
+    ```
+    
+    —# target 부분에 해당하는 부분이 그냥 레이블과 같이 사용될 수 있다. 클린 명령어 추가
+    
+    레이블로 사용될 때는 당연히 의존 관계 부분은 없어도 상관없다.
+    
+    레이블 : 
+    
+    ```bash
+    clean :
+    					rm $(OBJECTS)
+    ```
+    
+    **매크로의 사용에서 ${..}, $(..), $..를 모두 사용할 수 있습니다. 그러나 대부분의 책에서는 $(..) 을 사용권고**
+    
+    ### 확장자 규칙
+    
+    파일의 확장자를 보고, 그에 따라 적절한 연산을 수행시키는 규칙
+    
+    - .c파일은 일반적으로 C 소스 코드
+    - .o파일은 목적 파일
+    
+    —# .c파일은 컴파일 되어서 .o파일이 되어야 한다.
+    
+    확장자 규칙에 의해서 make 파일들간의 확장자를 자동으로 인식해서 필요한 작업을 수행한다.
+    
+    ```bash
+    .c.o : // 사용자가 확장자 규칙을 구현가능 해당값은 디폴트 값
+    $(CC) $(CFLAGS) -c $< -o $@
+    // 확장자 규칙을 구현하려면 해당 make 파일에 명시해줘야 한다.
+    .c.o : <- 우리가 확장자 규칙을 구현
+                    $(CC) $(INC) $(CFLAGS) $<-
+    ```
+    
+    ```bash
+    $@  ":" 를 기준으로 왼쪽이라는 의미
+    $^  ":" 를 기준으로 오른쪽이라는 의미
+    $<      수정된 날짜순으로 
+    <:.c = .o : 해당 결과로 나온 파일의 확장자를 변경
+    ```
+    
+    —# AR 명령어 : 라이브러리 아카이브를 만들고 관리하는 명령어
+    
+    - r : 새로운 오브젝트 파일이면 추가, 기존 파일이면 치환
+    - c : 아카이브(라이브러리 파일) 생성, 존재하지 않는 아카이브를 작성(또는 갱신)하는 경우에도 경고 메시지를 출력하지 않음
+    
+    ### 내부 매크로
+    
+    **사용자가 정할 수 있는 매크로가 아닌 연산,처리하는데 쓰이는 매크로**
+    
+    ```bash
+    $* <- 확장자가 없는 현재의 목표 파일(Target)
+    만약 Target파일의 이름이 main.c라면 확장자를 제외한 main이 된다.
+    
+    $@ <- 현재의 목표 파일(Target)
+    
+    $< <- 현재의 목표 파일(Target)보다 더 최근에 갱신된 파일 이름
+    
+    $? <- 현재의 목표 파일(Target)보다 더 최근에 갱신된 파일이름
+    $< 와 $?를 구분하고 있지만 거의 같다고 봐도 무방하다.
+    
+    $< 는 현재의 목표 파일보다 더 최근에 갱신된 파일 이름이라고 하였다. .o 파일보다 더 최근에 갱신된 .c 파일은 자동적으로 컴파일이 된다. 가령 main.o를 만들고 난 다음에 main.c를 갱신하게 되면 main.c는 $<의 작용에 의해 새롭게 컴파일이 된다.
+    ```
+    
+    ### 매크로 치환
+    
+    이미 정의된 매크로의 내용의 일부만을 바꾸기위해 이용
+    
+    ```bash
+    MY_NAME = "my name"
+    YOUR_NAME = "MY_NAME:my=your"
+    ```
+    
+    ### 자동 의존 관계 생성
+    
+    일반적인 make의 구조는 아래와 같이 target, dependency, command가 연쇄적으로 정의되어 있다
+    
+    만약 command가 없이 타겟과 의존 관계만 표시가 되면 이는 target이 어느 파일에 의존하고 있는지 표시해 주는 정보의 역할을 한다. 이 부분을 정의해줘야 make파일이 제대로 동작한다.
+    
+    1. **Exercise 00**
+    
+    - **정의되어 있지않은 Header를 정의하는 코드 작성**
+        
+        ```c
+        #ifndef FT_H
+        # define FT_H
+        
+        void	ft_putchar(char c);
+        void	ft_swap(int *a, int *b);
+        void	ft_putstr(char *str);
+        int		ft_strlen(char *str);
+        int		ft_strcmp(char *s1, char *s2);
+        
+        #endif
+        ```
+        
+        - Ifndef를 이용하여 해당 전처리가 정의되어 있지않다면 정의 후 endif로 마무리
+
+</div>
+</details>
+
 ## 3. Rush
 
 ### C Piscine Rush 01
