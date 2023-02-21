@@ -4237,23 +4237,178 @@ void	ft_putnbr(int nb)
     
     1. **Exercise 00**
     
-    - **정의되어 있지않은 Header를 정의하는 코드 작성**
+    - **shell 명령어를 통해  해당 폴더에 있는 모든 c파일을 컴파일 하여 라이브러리로 만들어주는 스크립트 작성**
         
-        ```c
-        #ifndef FT_H
-        # define FT_H
-        
-        void	ft_putchar(char c);
-        void	ft_swap(int *a, int *b);
-        void	ft_putstr(char *str);
-        int		ft_strlen(char *str);
-        int		ft_strcmp(char *s1, char *s2);
-        
-        #endif
+        ```bash
+        gcc -Wall -Wextra -Werror -c ft_putchar.c ft_swap.c ft_putstr.c ft_strlen.c ft_strcmp.c 
+        ar rc libft.a  ft_putchar.o ft_swap.o ft_putstr.o ft_strlen.o ft_strcmp.o
         ```
         
-        - Ifndef를 이용하여 해당 전처리가 정의되어 있지않다면 정의 후 endif로 마무리
+        - 모든 c파일을 차례대로 입력
+        - ar 명령어를 통해 컴파일 된 오브젝트파일들로 라이브러리 생성
+        
+        —# AR 명령어 : 라이브러리 아카이브를 만들고 관리하는 명령어
+        
+        - r : 새로운 오브젝트 파일이면 추가, 기존 파일이면 치환
+        - c : 아카이브(라이브러리 파일) 생성, 존재하지 않는 아카이브를 작성(또는 갱신)하는 경우에도 경고 메시지를 출력하지 않음
+        
+    1. **Exercise 01**
+    
+    - **make파일을 사용하여 위 과제와 같은 결과를 도출**
+        - 모든 오브젝트를 지울 수 있는 clean 추가
+        - clean + 라이브러리까지 지우는 fclean 추가
+        - 생성된 모든 라이브러리와 오브젝트를 지우고 다시 만드는 re 추가
+        
+        ```bash
+        NAME = libft.a
+        SRCS = srcs/ft_putchar.c srcs/ft_swap.c srcs/ft_putstr.c srcs/ft_strlen.c srcs/ft_strcmp.c
+        OBJS = srcs/ft_putchar.o srcs/ft_swap.o srcs/ft_putstr.o srcs/ft_strlen.o srcs/ft_strcmp.o
+        INC = includes/
+        CC = cc
+        CFLAGS = -Wall -Wextra -Werror
+        RM = rm -f
+        AR = ar rc
+        
+        all : ${NAME}
+        
+        ${NAME} : ${OBJS}
+        	${AR} $@ $^
+        
+        .c.o	:
+        	$(CC) $(CFLAGS) -c $< -o $@	-I $(INC)
+        
+        clean :
+        	${RM} ${OBJS}
+        
+        fclean : clean
+        	${RM} ${NAME}
+        
+        re : fclean all
+        ```
+        
+        - **makefile 생성 규칙에 따라 makefile을 작성**
+        
+    1. **Exercise 02**
+    
+    - **C07 마지막 split 함수 재구현**
+        
+        ```c
+        #include <stdlib.h>
+        
+        char	**ft_split(char *str, char *charset);
+        char	*sep_str(char *str, char *charset, int *i);
+        int		arr_size(char	*str, char	*charset);
+        int		sep_check(char ch, char	*charset);
+        
+        /*
+        #include <stdio.h>
+        int main()
+        {
+        	char	*str ="QfB8RDlcsw3Tq 3r1DHjKVDbhHhsOQF2qE";
+        	char	*charset ="WHk0hrKf";
+        	char	**arr_str = ft_split(str, charset);
+        	int		size;
+        
+        	size = 0;
+        	while (sep_check(str[size], charset) == 1)
+        		size++;
+        	for(int i = 0; i<=5 ; i++)
+        		printf("[%d] : [%s]\n", i, arr_str[i]);
+        	return (0);
+        }
+        */
+        
+        int	sep_check(char ch, char	*charset)
+        {
+        	int	i;
+        
+        	i = 0;
+        	while (charset[i] != 0)
+        	{
+        		if (ch == charset[i])
+        			return (1);
+        		i++;
+        	}
+        	return (0);
+        }
+        
+        char	*sep_str(char	*str, char	*charset, int *i)
+        {
+        	int		idx;
+        	int		tmp;
+        	char	*str_tmp;
+        
+        	idx = -1;
+        	tmp = 0;
+        	while (str[tmp] != 0)
+        	{
+        		if (sep_check(str[tmp], charset) != 1)
+        			tmp++;
+        		else
+        			break ;
+        	}
+        	str_tmp = (char *)malloc(sizeof(char) * (tmp + 1));
+        	if (!(str_tmp))
+        		return (NULL);
+        	*i = *i + tmp;
+        	while (++idx < tmp)
+        		str_tmp[idx] = str[idx];
+        	str_tmp[tmp] = '\0';
+        	return (str_tmp);
+        }
+        
+        int	arr_size(char	*str, char	*charset)
+        {
+        	int	i;
+        	int	size;
+        
+        	i = 0;
+        	if (str[i] == 0)
+        		return (0);
+        	size = 1;
+        	while (str[i] != 0)
+        	{
+        		if (sep_check(str[i], charset) == 1)
+        		{
+        			size ++;
+        			while (sep_check(str[i], charset) == 1)
+        				i++;
+        		}
+        		else
+        			i++;
+        	}
+        	return (size);
+        }
+        
+        char	**ft_split(char *str, char *charset)
+        {
+        	char	**str_arr;
+        	int		i;
+        	int		idx;
+        	int		len;
+        
+        	i = 0;
+        	idx = 0;
+        	while (sep_check(str[i], charset) == 1)
+        		i++;
+        	len = arr_size(&str[i], charset);
+        	str_arr = (char **)malloc(sizeof(char *) * (len + 1));
+        	if (!(str_arr))
+        		return (NULL);
+        	while (idx < len)
+        	{
+        		str_arr[idx++] = sep_str((str + i), charset, &i);
+        		if (sep_check(str[i], charset) == 1)
+        		{
+        			while (sep_check(str[i], charset) == 1)
+        				i++;
+        		}
+        	}
+        	str_arr[idx] = NULL;
+        	return (str_arr);
+        }
 
+        ```
 </div>
 </details>
 
