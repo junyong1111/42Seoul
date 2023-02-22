@@ -4419,6 +4419,331 @@ void	ft_putnbr(int nb)
 <summary> Rush 01  </summary>
 <div markdown="1">
 
+## N x N skyscraper
+
+skyscraper 또는 고층빌딩퍼즐문제
+
+고층빌딩 퍼즐은 다양한 크기와 모양의 블록들을 사용하여 건물을 만드는 퍼즐 게임으로  보통 각 블록은 직육면체 형태를 하고 있으며, 이를 적절히 배치하여 정해진 건물 높이와 모양에 맞게 만들어야 한다.
+
+퍼즐의 규칙은 다음과 같다. 먼저, 건물의 바닥이 주어진 후, 다양한 크기와 모양의 블록들이 제공이 된다. 퍼즐 플레이어는 이 블록들을 사용하여 건물을 쌓아 올려야 한다. 각 블록은 바닥에 있는 다른 블록 위에만 놓을 수 있으며, 블록은 겹쳐 놓을 수 없다. 또한, 건물의 높이와 모양이 지정되어 있으므로, 건물을 만들 때는 이에 맞게 정확하게 쌓아 올려야 한다.
+
+해당 과제를 해결하기 위해서 총 main을 포함한 **5개의 파일들이 존재**한다.
+
+—# N x N 을 해결해야하지만 쉬운 난이도인 N = 4로 고정하여 해결함
+
+### 1. **input_error.c**
+
+- **input_error(int n, char *str)**
+
+해당 함수는 argv로 들어온 문자열을 하나씩 읽는다. 최초 agvc의 값이 2가 아닌 경우 즉 이상값이 나온경우 함수는 작동하지 않으며 제대로 된 문자열이 들어온 경우 
+
+- 짝수이며서 문자가 숫자인 경우 통과
+- 홀수이면서 공백인 경우 통과
+- 이외의 경우는 에러
+- i의 값이 N * 4 * 2 - 1  아니경우 즉 필요한 조건보다 문자가 더 들어온 경우 에러
+
+```c
+int	input_error(int n, char *str)
+{
+	int	i;
+
+	i = 0;
+	if (n == 2)
+	{
+		while (str[i])
+		{
+			if (i % 2 == 0 && str[i] >= 49 && str[i] <= 52)
+				i++;
+			else if (i % 2 == 1 && str[i] == 32)
+				i++;
+			else
+				return (0);
+		}
+		if (i == 31)
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (0);
+}
+```
+
+### 2. board.c
+
+- ****build_board(int n)**
+    - 현재 매개변수로 들어온 n값에 맞게 N x N 2차원 보드판 생성 모든 원소는 0으로 초기화
+    - 현재 입력받은 N값보다 2배 큰 보드를 생성한다
+        - 빈 공간은 각 행과 열에서 바라본 건물의 정보를 저장
+        - 현재 답을 찾았는지 확인
+        - 현재 비교하고자 하는 값 저장
+- **board_free(int **b, int n)**
+    - 동적할당 받았던 2차원 배열을 함수가 끝나기 전 할당을 해제해주는 함수 해제 후 프로그램이 종료되므로 안해도 큰 영향은 없다.
+- **print_board(int **arr, int n)**
+    - N x N 크기의 2차원 배열에 모든 원소들을 출력해주는 함수
+
+```c
+#include <unistd.h>
+#include <stdlib.h>
+
+int	**build_board(int n)
+{
+	int	**arr;
+	int	i;
+	int	j;
+
+	arr = (int **)malloc(sizeof(int *) * (n * 2));
+	i = 0;
+	j = 0;
+	while (i < n * 2)
+	{
+		arr[i] = (int *)malloc(sizeof(int) * (n * 2));
+		while (j < n * 2)
+			arr[i][j++] = 0;
+		j = 0;
+		i++;
+	}
+	return (arr);
+}
+
+void	board_free(int **b, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n * 2)
+	{
+		free(b[i]);
+		i++;
+	}
+	free(b);
+}
+
+void	print_board(int **arr, int n)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < n)
+	{
+		j = 0;
+		while (j < n)
+		{
+			arr[i][j] += '0';
+			write (1, &arr[i][j], 1);
+			write (1, " ", 1);
+			j++;
+		}
+		write (1, "\n", 1);
+		i++;
+	}
+}
+```
+
+### 3. possible.c
+
+- **building_y_possible(int **b, int n, int x)**
+    - 백트랙킹으로 탐색된 y의 값이 현재 주어진 빌딩의 개수와 일치하는지 확인해주는 함수
+    - 현재 자신의 index위치에 있는 빌딩의 높이를 저장하며 이동하면서 자신보다 큰 빌딩을 만났을 경우 값을 증가
+    - 위에서부터 아래로 확인했으면 아래에서 위로 조건에 맞게 확인
+    - 위 조건을 모두 통과했다면 가능하므로 True 리턴
+- **building_x_possible(int **b, int n, int y)**
+    - y축을 확인하는 방식과 마찬가지로 x축의 가능성에 대해 확인해주는 함수
+    - x축은 모든 퍼즐이 완성된 이후 확인해야 하므로 다른 함수에서 사용
+- **last_building_possible(int **b, int n, int y)**
+    - 위에서 만든 x축을 확인하는 함수를 총 N번 돌려서 현재 보드에 정답이 가능한지 확인해주는 함수
+    - N번 중 1번이라도 실패한다면 가능성이 없으므로 False 리턴
+- **is_possible(int **b, int n, int y, int x)**
+    - 현재 보드에 들어가는 값이 가능한지를 확인해주는 함수
+        - 현재 값이 같은 y축에 들어있는지 확인
+        - 현재 값이 같은 x축에 들어있는지 확인
+        - 2개 모두 포함되어 있지 않다면 True 반환
+
+```c
+int	building_y_possible(int **b, int n, int x)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+		b[i++][n + 2] = 0;
+	i = -1;
+	while (++i < n)
+	{
+		if (b[i][x] > b[0][n + 2])
+		{
+			b[0][n + 2] = b[i][x];
+			b[1][n + 2]++;
+		}
+	}
+	while (--i >= 0)
+	{
+		if (b[i][x] > b[2][n + 2])
+		{
+			b[2][n + 2] = b[i][x];
+			b[3][n + 2]++;
+		}
+	}
+	if (b[n][x] == b[1][n + 2] && b[n + 1][x] == b[3][n + 2])
+		return (1);
+	return (0);
+}
+
+int	building_x_possible(int **b, int n, int y)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+		b[i++][n + 2] = 0;
+	i = -1;
+	while (++i < n)
+	{
+		if (b[y][i] > b[0][n + 2])
+		{
+			b[0][n + 2] = b[y][i];
+			b[1][n + 2]++;
+		}
+	}
+	while (--i >= 0)
+	{
+		if (b[y][i] > b[2][n + 2])
+		{
+			b[2][n + 2] = b[y][i];
+			b[3][n + 2]++;
+		}
+	}
+	if (b[n + 2][y] == b[1][n + 2] && b[n + 3][y] == b[3][n + 2])
+		return (1);
+	return (0);
+}
+
+int	last_building_possible(int **b, int n, int y)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (building_x_possible(b, n, y) == 0)
+			return (0);
+		y++;
+		i++;
+	}
+	return (1);
+}
+
+int	is_possible(int **b, int n, int y, int x)
+{
+	int	i;
+	int	curr_value;
+
+	curr_value = b[0][n];
+	i = 0;
+	while (i < n)
+		if (b[i++][x] == curr_value)
+			return (0);
+	i = 0;
+	while (i < n)
+		if (b[y][i++] == curr_value)
+			return (0);
+	return (1);
+}
+```
+
+### 4. skyscraper.c
+
+백트랙킹을 이용하여 재귀적으로 고층빌딩 퍼즐을 해결
+
+- **skyscraper(int **b, int n, int y, int x)**
+    - 빌딩의 높이가 0인 빌딩은 없으므로 최초 크기(value)를 1로 설정
+    - 만약 현재 y값이 n과 같다면, 즉 현재 y의 모든 빌딩들이 채워진 경우 y 가능성 체크
+        - 만약 현재 y축에 모든 빌딩이 가능성 체크를 통과했다면 다음 x축으로 이동
+    - 만약 현재 x값이 n과 같다면, 즉 현재 모든 퍼즐에 빌딩들이 채워진 경우 x 가능성 체크
+        - 만약 퍼즐에 모든 빌딩들이 가능하다면 보드에 정답을 찾았다는 체크
+    - 그게 아닌 경우 백트랙킹을 통해 모든 빌딩들을 해당 index에 삽입하면서 가능성을 체크
+    - 만약 현재 값이 가능하다면 y값을 한 칸 전진 후 다시 트랙킹 시작
+
+```c
+void	print_board(int **arr, int n);
+int		building_y_possible(int **b, int n, int x);
+int		last_building_possible(int **b, int n, int y);
+int		is_possible(int **b, int n, int y, int x);
+
+void	skyscraper(int **b, int n, int y, int x)
+{
+	int	value;
+
+	if (y == n)
+		if (building_y_possible(b, n, x) == 1)
+			skyscraper(b, n, 0, x + 1);
+	if (x == n)
+	{
+		if (last_building_possible(b, n, 0) == 1)
+		{
+			print_board(b, n);
+			b[0][n + 1] = 1;
+			return ;
+		}
+	}
+	value = 1;
+	while (value <= n)
+	{
+		b[0][n] = value++;
+		if (b[0][n + 1] != 1 && is_possible(b, n, y, x))
+		{
+			b[y][x] = value - 1;
+			skyscraper(b, n, y + 1, x);
+			b[y][x] = 0;
+		}
+	}
+}
+```
+
+### 5. main.c
+
+프로그램 실행시 인자로 받은 문자열을 통해 4 * 4 Skyscrpaer 퍼즐 백트랙킹 탐색 시작
+
+```c
+#include <unistd.h>
+#include <stdlib.h>
+
+int		**build_board(int n);
+void	skyscraper(int **b, int n, int y, int x);
+void	board_free(int **b, int n);
+int		input_error(int n, char *str);
+
+int	main(int argc, char **argv)
+{
+	int	**b;
+	int	*arr;
+	int	i;
+
+	b = build_board(4 * 2);
+	if (input_error(argc, argv[1]))
+	{
+		arr = (int *)malloc(sizeof(int) * 16);
+		i = 0;
+		while (i < 16)
+		{
+			arr[i] = argv[1][i * 2] - '0';
+			i++;
+		}
+		i = -1;
+		while (++i < 16)
+			b[4 + (i / 4)][i % 4] = arr[i];
+		skyscraper(b, 4, 0, 0);
+		if (b[0][5] == 0)
+			write (1, "Error\n", 6);
+		board_free(b, 4);
+	}
+	else
+		write (1, "Error\n", 6);
+	return (0);
+}
+```
+
 
 
 </div>
