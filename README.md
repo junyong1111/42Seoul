@@ -4757,6 +4757,15 @@ int	main(int argc, char **argv)
 </div>
 </details>
 
+## 4. BSQ
+
+### C Piscine BSQ
+<details>
+<summary> BSQ  </summary>
+<div markdown="1">
+
+</div>
+</details>
 
 <!--
 <details>
